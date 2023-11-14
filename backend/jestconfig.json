@@ -1,0 +1,9 @@
+{
+  "transform": {
+    "^.+\\.(t|j)sx?$": "ts-jest"
+  },
+  "testRegex": "(/src/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+  "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json", "node"],
+  "globalSetup": "./src/test/jest/utils/globalSetup.js",
+  "globalTeardown": "./src/test/jest/utils/globalTearDown.js"
+}
