@@ -9,8 +9,7 @@ const USERS_COLLECTION_NAME = 'users';
 interface IUsersDoc extends IUser, Document { }
 interface IUsersModel extends PaginateModel<IUsersDoc> {
 	build: (attr: IUser) => IUsersDoc;
-}
-
+};
 
 const UsersSchema = new Schema(
 	{

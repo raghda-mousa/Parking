@@ -9,12 +9,12 @@ const PARKING_LOT_COLLECTION_NAME = 'parking-lots';
 interface IParkingLotDoc extends IParkingLot, Document { }
 interface IParkingLotModel extends PaginateModel<IParkingLotDoc> {
 	build: (attr: IParkingLot) => IParkingLotDoc;
-}
-
+};
 
 const ParkingLotSchema = new Schema(
 	{
 		name: { type: String },
+		city: { type: String },//edit
 		status: {
 			type: String,
 			enum: EParkingLotStatus,
