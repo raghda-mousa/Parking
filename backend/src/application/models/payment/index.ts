@@ -16,7 +16,7 @@ class PaymentModel {
 	constructor() {
 		this. _paymentModel = this.registerEnvMgmtPlatformEnvModel();
 	}
-	public get userModel() {
+	public get paymentModel() {
 		return this._paymentModel;
 	}
 	private registerEnvMgmtPlatformEnvModel = () => {
