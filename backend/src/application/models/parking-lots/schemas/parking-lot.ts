@@ -1,4 +1,4 @@
-import { Document, Model, Schema, Types, PaginateModel } from 'mongoose';
+import mongoose,{ Document, Model, Schema, Types, PaginateModel } from 'mongoose';
 import paginate from 'mongoose-paginate-v2';
 import { IParkingLot } from '../interfaces';
 import {
@@ -14,16 +14,28 @@ interface IParkingLotModel extends PaginateModel<IParkingLotDoc> {
 const ParkingLotSchema = new Schema(
 	{
 		name: { type: String },
-		city: { type: String },//edit
-		status: {
+		city: { type: String },
+		USERID: 
+		  {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'UsersSchema'
+		  },
+		number_of_slots:
+			{
+				type: Number,
+				default: 0
+			},
+		status: 
+		   {
 			type: String,
 			enum: EParkingLotStatus,
 			default: EParkingLotStatus.IDL
-		},
-		chargePerMinute: {
+		  },
+		chargePerMinute: 
+		  {
 			type: Number,
 			default: 0
-		},
+		  },
 		createdAt: { type: Date, default: Date.now },
 		updatedAt: { type: Date },
 		createdBy: { type: String },

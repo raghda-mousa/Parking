@@ -1,4 +1,4 @@
-import { Document, Model, Schema, Types, PaginateModel } from 'mongoose';
+import mongoose,{ Document, Model, Schema, Types, PaginateModel } from 'mongoose';
 import paginate from 'mongoose-paginate-v2';
 import { Ipayment } from '../interfaces';
 import {
@@ -12,6 +12,10 @@ interface IpaymentModel extends PaginateModel<IpaymentDoc> {
 }
 const PaymentSchema = new Schema(
 	{
+		RESERVATION_ID:{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'ReservationSchema'
+		},
 		payment_amount:{
             type: Number,
         },
@@ -19,9 +23,7 @@ const PaymentSchema = new Schema(
 			type: String,
 			enum: paymentStatus,
 			default: paymentStatus.ACTIVE
-		},
-		payment_date: {type: Date},
-		
+		},		
 		createdAt: { type: Date, default: Date.now },
 		updatedAt: { type: Date },
 		createdBy: { type: String },

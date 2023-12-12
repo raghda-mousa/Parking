@@ -14,11 +14,11 @@ const ReservationSchema = new Schema(
 		cost: {type:Number}, 
 		USERID: {
 			type: mongoose.Schema.Types.ObjectId,
-			ref: 'users'
+			ref: 'UsersSchema'
 		  },
-		  PARKNGID: {
+		PARKNGID: {
 			type: mongoose.Schema.Types.ObjectId,
-			ref: 'parking-lot'
+			ref: 'ParkingLotSchema'
 		  },
 		createdAt: { type: Date, default: Date.now },
 		updatedAt: { type: Date },
