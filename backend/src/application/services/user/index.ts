@@ -6,6 +6,7 @@ import {
     EUserStatus,
     UserModel
 } from '@models'
+import { EUserType } from 'application/models/users/enums';
 
 export class UserService {
     private logger = logi(__filename);
@@ -34,9 +35,8 @@ export class UserService {
         if (!user || !(await bcrypt.compare(password, user.password))) {
             return null
         }
-
-        const token = jwt.sign({ name: user.name, email: user.email }, EnvironementService.jwtConfig.secret);
-        return { token }
+        const token = jwt.sign({ name: user.name, email: user.email,type:user.type }, EnvironementService.jwtConfig.secret);
+        return { token,type:user.type }
     }
     public getUserById = async (id: string) => {
         try {

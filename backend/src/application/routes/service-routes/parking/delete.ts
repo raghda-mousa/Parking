@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import { param } from 'express-validator';
-import { ParkingLotService, ResponseService } from '@services';
+import { ParkingService, ResponseService } from '@services';
 import { Validation } from '@middlewares';
 
 const router = express.Router();
@@ -12,8 +12,8 @@ router.delete(
     Validation.validateRequest,
     async (req: Request, res: Response) => {
         const { id } = req.params
-        const parkingLotService = new ParkingLotService();
-        const result = await parkingLotService.findByIdAndDelete(id);
+        const parkingService = new ParkingService();
+        const result = await parkingService.findByIdAndDelete(id);
         if (result) {
             return ResponseService.sendSuccess(res, result, 'deleted successfully')
         }

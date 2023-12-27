@@ -2,10 +2,12 @@ import mongoose,{ Document, Model, Schema, Types, PaginateModel } from 'mongoose
 import paginate from 'mongoose-paginate-v2';
 import { Ipayment } from '../interfaces';
 import {
-    paymentStatus
+	EPaymentGateway,
+    EPaymentStatus, EPaymentType
 } from '../enums';
+import { RESERVATION_MODEL_NAME } from 'application/models/reservation';
 const PAYMENT_MODEL_NAME = 'payment';
-const PAYMENT_COLLECTION_NAME = 'payment';
+const PAYMENT_COLLECTION_NAME = 'payments';
 interface IpaymentDoc extends Ipayment, Document { }
 interface IpaymentModel extends PaginateModel<IpaymentDoc> {
 	build: (attr: Ipayment) => IpaymentDoc;
@@ -14,16 +16,28 @@ const PaymentSchema = new Schema(
 	{
 		RESERVATION_ID:{
 			type: mongoose.Schema.Types.ObjectId,
-			ref: 'ReservationSchema'
+			ref: RESERVATION_MODEL_NAME
 		},
 		payment_amount:{
             type: Number,
         },
 		status: {
 			type: String,
-			enum: paymentStatus,
-			default: paymentStatus.ACTIVE
+			enum: EPaymentStatus,
+			default: EPaymentStatus.PROCESSING
+		},	
+		type: {
+			type: String,
+			enum: EPaymentType,
+			default: EPaymentType.CASH
 		},		
+		gateway: {
+			type: String,
+			enum: EPaymentGateway,
+			default: EPaymentGateway.JAWWAL_PAY
+		},
+		startTime: { type: Date, default: Date.now },		
+		endTime: { type: Date},
 		createdAt: { type: Date, default: Date.now },
 		updatedAt: { type: Date },
 		createdBy: { type: String },

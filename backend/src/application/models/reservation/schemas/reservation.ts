@@ -1,6 +1,8 @@
 import mongoose,{ Document, Model, Schema, Types, PaginateModel } from 'mongoose';
 import paginate from 'mongoose-paginate-v2';
 import { IReservation } from '../interfaces';
+import { USERS_MODEL_NAME,PARKING_MODEL_NAME } from '@models';
+import { EReservationStatus } from '../enums';
 
 const RESERVATION_MODEL_NAME = 'reservation';
 const RESERVATION_COLLECTION_NAME = 'reservation';
@@ -11,19 +13,28 @@ interface IReservationModel extends PaginateModel< IReservationDoc> {
 
 const ReservationSchema = new Schema(
 	{
-		cost: {type:Number}, 
-		USERID: {
+		userId: {
 			type: mongoose.Schema.Types.ObjectId,
-			ref: 'UsersSchema'
+			ref: USERS_MODEL_NAME
 		  },
-		PARKNGID: {
+		parkingId: {
 			type: mongoose.Schema.Types.ObjectId,
-			ref: 'ParkingLotSchema'
+			ref: PARKING_MODEL_NAME
 		  },
+		status: 
+		   {
+			type: String,
+			enum: EReservationStatus,
+			default: EReservationStatus.PENDING
+		  },
+		sartTime: { type: Date },
+		endTime: { type: Date },
 		createdAt: { type: Date, default: Date.now },
 		updatedAt: { type: Date },
-		createdBy: { type: String },
-		updatedBy: { type: String }
+		createdBy: { type: mongoose.Schema.Types.ObjectId,
+			ref: USERS_MODEL_NAME },
+		updatedBy: { type: mongoose.Schema.Types.ObjectId,
+			ref: USERS_MODEL_NAME }
 	},
 	{
 		toJSON: {
