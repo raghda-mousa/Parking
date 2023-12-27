@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import { param } from 'express-validator';
-import { ParkingLotService, ResponseService, UserService } from '@services';
+import {ResponseService, UserService } from '@services';
 import { Validation } from '@middlewares';
 
 const router = express.Router();

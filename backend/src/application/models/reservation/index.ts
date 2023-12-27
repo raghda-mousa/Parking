@@ -24,13 +24,13 @@ class ReservationModel {
 		ReservationSchema.statics.build = (
 			attr: IReservation
 		) => {
-			return new ParkingLot(attr);
+			return new Reservation(attr);
 		};
-		const ParkingLot: IReservationModel = global.serviceDB.model<
+		const Reservation: IReservationModel = global.serviceDB.model<
 			IReservationDoc,
 			IReservationModel
 		>(RESERVATION_MODEL_NAME, ReservationSchema, RESERVATION_COLLECTION_NAME);
-		return ParkingLot;
+		return Reservation;
 	};
 }
 export {

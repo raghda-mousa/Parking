@@ -1,5 +1,5 @@
 import {
-	paymentStatus
+	EPaymentStatus
 } from './enums';
 import {
 	Ipayment
@@ -23,13 +23,13 @@ class PaymentModel {
 		PaymentSchema.statics.build = (
 			attr: Ipayment
 		) => {
-			return new ParkingLot(attr);
+			return new Payment(attr);
 		};
-		const ParkingLot: IpaymentModel = global.serviceDB.model<
+		const Payment: IpaymentModel = global.serviceDB.model<
 			IpaymentDoc,
 			IpaymentModel
 		>(PAYMENT_MODEL_NAME, PaymentSchema,PAYMENT_COLLECTION_NAME);
-		return ParkingLot;
+		return Payment;
 	};
 }
 export {
@@ -37,7 +37,7 @@ export {
 	IpaymentModel,
 	PaymentSchema,
 	IpaymentDoc,
-	paymentStatus,
+	EPaymentStatus,
 	Ipayment,
 	PAYMENT_COLLECTION_NAME,
 	PAYMENT_MODEL_NAME

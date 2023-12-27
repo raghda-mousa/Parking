@@ -1,11 +1,14 @@
-import mongoose from 'mongoose';
-import { paymentStatus } from '../enums';
+import { EPaymentGateway, EPaymentStatus, EPaymentType } from '../enums';
 
 export interface Ipayment {
-    RESERVATION_ID: mongoose.Schema.Types.ObjectId;
-    payment_amount: number;
-    status?: paymentStatus;
-    createdAt?: Date;
+    reservationId: string;
+    paymnentAmount: number;
+    status: EPaymentStatus;
+    type: EPaymentType;
+    gateway: EPaymentGateway;
+    startTime:Date;
+    endTime: Date;
+    createdAt: Date;
     updatedAt?: Date;
     createdBy: string;
     updatedBy?: string;

@@ -1,17 +1,17 @@
 import { validationResult } from 'express-validator';
 import { Types } from 'mongoose';
-import { IReservation, IReservationModel } from 'application/models/reservation/';
+import { EReservationStatus, IReservation, IReservationModel, ReservationModel } from 'application/models/reservation/';
 
 export class ReservationService {
-    private reservationModel: IReservationModel;
+    private reservationModel: ReservationModel;
 
-    constructor(reservationModel: IReservationModel) {
-        this.reservationModel = reservationModel;
+    constructor() {
+        this.reservationModel = new ReservationModel();
     }
 
     private validateReservationData = (data: IReservation): string[] => {
         const errors: string[] = [];
-        if (!data.USERID) {
+        if (!data.userId) {
             errors.push('User ID is required.');
         }
 
@@ -26,7 +26,7 @@ export class ReservationService {
         }
 
         try {
-            const reservation = await this.reservationModel.create(reservationData);
+            const reservation = await this.reservationModel.reservationModel.create(reservationData);
             return reservation;
         } catch (error) {
             // Handle other errors (log, throw, etc.)
@@ -37,7 +37,7 @@ export class ReservationService {
 
     public getReservationById = async (reservationId: Types.ObjectId): Promise<IReservation | null> => {
         try {
-            const reservation = await this.reservationModel.findById(reservationId);
+            const reservation = await this.reservationModel.reservationModel.findById(reservationId);
             return reservation;
         } catch (error) {
             console.error(error);
@@ -50,7 +50,7 @@ export class ReservationService {
         updateData: Partial<IReservation>
     ): Promise<IReservation | null> => {
         try {
-            const reservation = await this.reservationModel.findByIdAndUpdate(reservationId, updateData, { new: true });
+            const reservation = await this.reservationModel.reservationModel.findByIdAndUpdate(reservationId, updateData, { new: true });
             return reservation;
         } catch (error) {
             console.error(error);
@@ -60,7 +60,7 @@ export class ReservationService {
 
     public deleteReservation = async (reservationId: Types.ObjectId): Promise<boolean> => {
         try {
-            const result = await this.reservationModel.findByIdAndDelete(reservationId);
+            const result = await this.reservationModel.reservationModel.findByIdAndDelete(reservationId);
             return !!result;
         } catch (error) {
             console.error(error);
@@ -70,7 +70,16 @@ export class ReservationService {
 
     public getReservationsByUserId = async (userId: Types.ObjectId): Promise<IReservation[]> => {
         try {
-            const reservations = await this.reservationModel.find({ userId });
+            const reservations = await this.reservationModel.reservationModel.find({ userId });
+            return reservations;
+        } catch (error) {
+            console.error(error);
+            return [];
+        }
+    };
+    public getReservationsByParkingId = async (parkingId: string): Promise<IReservation[]> => {
+        try {
+            const reservations = await this.reservationModel.reservationModel.find({ parkingId,status:EReservationStatus.ACTIVE });
             return reservations;
         } catch (error) {
             console.error(error);

@@ -3,12 +3,12 @@ import {
 } from '../enums';
 export interface IUser {
 	name: string;
-	status?: EUserStatus;
+	status: EUserStatus;
 	email: string;
 	password: string
-	createdAt?: Date;
+	createdAt: Date;
 	updatedAt?: Date;
 	createdBy: string;
 	updatedBy?: string;
-	type?:EUserType
+	type:EUserType
 }

@@ -3,6 +3,7 @@ import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
 import { ResponseService } from '@services'
 import { Validation } from '@middlewares';
+import { EUserType } from 'application/models/users/enums';
 const router = express.Router();
 
 router.post(
