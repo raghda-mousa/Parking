@@ -1,3 +1,5 @@
 export * from './parking'
 export * from './users'
 export * from './auth'
+//export * from './location'
+export * from './reservation'

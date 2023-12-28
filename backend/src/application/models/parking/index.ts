@@ -13,6 +13,7 @@ import {
 } from './schemas';
 
 class ParkingModel {
+    [x: string]: any;
 	private _parkingModel: IParkingModel;
 	constructor() {
 		this._parkingModel = this.registerEnvMgmtPlatformEnvModel();

@@ -39,4 +39,9 @@ app.all('*', async (req, res) => {
   ResponseService.sendNotFound(res, "Not Found")
 });
 
+const PORT = 3000;
+app.listen(PORT, () => {
+  logger.info('Server is running on port ${PORT}');
+});
+
 export { app };
