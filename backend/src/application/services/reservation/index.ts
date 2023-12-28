@@ -1,12 +1,14 @@
 import { validationResult } from 'express-validator';
 import { Types } from 'mongoose';
-import { EReservationStatus, IReservation, IReservationModel, ReservationModel } from 'application/models/reservation/';
+import { EReservationStatus, IReservation, IReservationModel, ReservationModel,IReservationDoc } from '@models';
+import { BarcodeService } from '../QR';
 
 export class ReservationService {
     private reservationModel: ReservationModel;
-
+    private barcodeService: BarcodeService;
     constructor() {
         this.reservationModel = new ReservationModel();
+        this.barcodeService = new BarcodeService();
     }
 
     private validateReservationData = (data: IReservation): string[] => {
@@ -18,7 +20,7 @@ export class ReservationService {
         return errors;
     };
 
-    public createReservation = async (reservationData: IReservation): Promise<IReservation | null> => {
+    public createReservation = async (reservationData: IReservation) => {
         const validationErrors = this.validateReservationData(reservationData);
         if (validationErrors.length > 0) {
             console.error('Validation Errors:', validationErrors);
@@ -27,7 +29,8 @@ export class ReservationService {
 
         try {
             const reservation = await this.reservationModel.reservationModel.create(reservationData);
-            return reservation;
+            const qrcode = await this.barcodeService.generateBarcode(reservation._id);
+            return {...reservation,qrcode};
         } catch (error) {
             // Handle other errors (log, throw, etc.)
             console.error(error);

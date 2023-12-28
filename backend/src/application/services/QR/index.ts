@@ -1,25 +1,26 @@
-// Replace these with your actual imports
+
 import { logi } from '@boost';
 import { UserModel, UsersSchema } from '@models';
-// Import ParkingModel from 'application/models/'; // You might want to uncomment and use this import
 
-// Import qrcode library - make sure it's installed with 'npm install qrcode'
 import * as qrcode from 'qrcode';
+import { ReservationService } from '../reservation';
 
 export class BarcodeService {
     private logger = logi(__filename);
+    private reservationService : ReservationService;
+    constructor() {
+        this.reservationService=new ReservationService();
+    }
 
-    constructor() {}
-
-    public async generateBarcode(userId: string, parkingLotId: string) {
+    public async generateBarcode(reservationId:string) {
         try {
-            const user = await getUserInfo(userId);
-            
-            const parkingLot = await getParkingLotInfo(parkingLotId);
+            const reservation = await this.reservationService.getReservationById(reservationId);
+            if(!reservation)
+            {
+                throw new Error('reservation not found')
+            }
 
-            const barcodeData = `${user.name}-${parkingLot.name}-${Date.now()}`;
-            
-            const qrCodeImage = await this.generateQRCode(barcodeData);
+            const qrCodeImage = await this.generateQRCode(reservationId);
 
             return qrCodeImage;
         } catch (error: any) {
@@ -37,26 +38,4 @@ export class BarcodeService {
             return null;
         }
     }
-}
-
-// Example in-memory user data store
-const usersDatabase: Record<string, any> = {
-    'user123': { name: 'John Doe', /* Other user properties */ },
-    'user456': { name: 'Jane Smith', /* Other user properties */ },
-};
-
-async function getUserInfo(userId: string) {
-    // Simulating fetching user data from an in-memory database
-    return usersDatabase[userId] || null;
-}
-
-// Example in-memory parking lot data store
-const parkingLotsDatabase: Record<string, any> = {
-    'lot123': { name: 'Parking Lot A', /* Other parking lot properties */ },
-    'lot456': { name: 'Parking Lot B', /* Other parking lot properties */ },
-};
-
-async function getParkingLotInfo(parkingLotId: string) {
-    // Simulating fetching parking lot data from an in-memory store
-    return parkingLotsDatabase[parkingLotId] || null;
 }
