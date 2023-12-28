@@ -1,4 +1,4 @@
-import mongoose,{ Document, Model, Schema, Types, PaginateModel } from 'mongoose';
+import mongoose,{ Document, Model, model, Schema, Types, PaginateModel } from 'mongoose';
 import paginate from 'mongoose-paginate-v2';
 import { IParking } from '../interfaces';
 import {
@@ -19,6 +19,23 @@ interface IParkingModel extends PaginateModel<IParkingDoc> {
 // 	},
 // 	coordinates:Array<Number>
 // })
+// location.ts
+
+const locationSchema = new Schema<Location>({
+    type: {
+        type: String,
+        default: 'Point' 
+    },
+    coordinates: {
+        type: [Number],
+        required: true 
+    },
+});
+
+locationSchema.index({ coordinates: '2dsphere' }); 
+
+export const LocationModel = model<Location>('Location', locationSchema);
+
 
 const ParkingSchema = new Schema(
 	{
@@ -43,7 +60,7 @@ const ParkingSchema = new Schema(
 			enum: EParkingStatus,
 			default: EParkingStatus.IDLE
 		  },
-		// location:LocationSchema,
+		 location:locationSchema,
 		chargePerMinute: 
 		  {
 			type: Number,

@@ -13,7 +13,9 @@ import {
 } from './schemas';
 
 class UserModel {
+    
 	private _userModel: IUsersModel;
+    static findOne: any;
 	constructor() {
 		this._userModel = this.registerEnvMgmtPlatformEnvModel();
 	}

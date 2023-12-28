@@ -1,7 +1,8 @@
 import { logi } from '@boost';
 import {
     EParkingStatus,
-    ParkingModel
+    ParkingModel,
+    UserModel
 } from '@models'
 import { ECities } from 'application/models/parking/enums';
 import { ReservationService } from '../reservation';
@@ -69,13 +70,12 @@ export class ParkingService {
             const parking = await this.parkingModel.parkingModel.findById(parkingId);
             if(!parking)
             {
-                ////
                 return null
             }
             const reservations = await this.reservationService.getReservationsByParkingId(parkingId);
             if(!reservations)
             {
-                ///
+                return parking.numberOfSlots;
             }
 
             return parking.numberOfSlots - reservations.length;
@@ -93,4 +93,32 @@ export class ParkingService {
             return null;
         }
     }
-} 
+
+    public async getParkingLotDetails(userId: string, parkingId: string) {
+        try {
+            const parking = await this.parkingModel.parkingModel.findOne({ _id: parkingId, owner: userId }).exec();
+    
+            if (!parking) {
+                return null;
+            }
+
+            const reservations = await this.reservationService.getReservationsByParkingId(parkingId);
+            const { name, numberOfSlots,chargePerMinute } = parking;
+            const emptySlots = numberOfSlots - reservations.length;;
+    
+            return {
+                name,
+                chargePerMinute,
+                numberOfSlots,
+                emptySlots,
+            };
+        } catch (error: any) {
+            this.logger.error(error.message);
+            return null;
+        }
+    }
+    
+    
+}
+
+

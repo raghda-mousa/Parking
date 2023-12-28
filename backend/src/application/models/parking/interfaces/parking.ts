@@ -17,3 +17,7 @@ export interface IParking {
 	createdBy: string;
 	updatedBy?: string;
 }
+export interface Location extends Document {
+    type: string;
+    coordinates: number[];
+}
