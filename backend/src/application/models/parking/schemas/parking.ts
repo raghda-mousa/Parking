@@ -51,8 +51,10 @@ const ParkingSchema = new Schema(
 		  },
 		createdAt: { type: Date, default: Date.now },
 		updatedAt: { type: Date },
-		createdBy: { type: String },
-		updatedBy: { type: String }
+		createdBy: { type: mongoose.Schema.Types.ObjectId,
+			ref: USERS_MODEL_NAME },
+		updatedBy: { type: mongoose.Schema.Types.ObjectId,
+			ref: USERS_MODEL_NAME }
 	},
 	{
 		toJSON: {

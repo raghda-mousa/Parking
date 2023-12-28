@@ -6,6 +6,7 @@ import {
     EPaymentStatus, EPaymentType
 } from '../enums';
 import { RESERVATION_MODEL_NAME } from 'application/models/reservation';
+import { USERS_MODEL_NAME } from 'application/models/users';
 const PAYMENT_MODEL_NAME = 'payment';
 const PAYMENT_COLLECTION_NAME = 'payments';
 interface IpaymentDoc extends Ipayment, Document { }
@@ -40,8 +41,10 @@ const PaymentSchema = new Schema(
 		endTime: { type: Date},
 		createdAt: { type: Date, default: Date.now },
 		updatedAt: { type: Date },
-		createdBy: { type: String },
-		updatedBy: { type: String }
+		createdBy: { type: mongoose.Schema.Types.ObjectId,
+			ref: USERS_MODEL_NAME },
+		updatedBy: { type: mongoose.Schema.Types.ObjectId,
+			ref: USERS_MODEL_NAME }
 	},
     {
 		toJSON: {
