@@ -67,7 +67,7 @@ export class ParkingService {
             if(!parking)
             {
                 ////
-                return
+                return null
             }
             const reservations = await this.reservationService.getReservationsByParkingId(parkingId);
             if(!reservations)
