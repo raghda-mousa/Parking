@@ -6,6 +6,8 @@ import {
 import { ECities } from 'application/models/parking/enums';
 import { ReservationService } from '../reservation';
 
+
+
 export class ParkingService {
     private parkingModel: ParkingModel;
     private reservationService : ReservationService;
@@ -14,6 +16,7 @@ export class ParkingService {
         this.parkingModel = new ParkingModel();
         this.reservationService= new ReservationService();
     }
+    
     public create = async ({ name,city,numberOfSlots,userId }: { name: string,city:ECities,numberOfSlots:number,userId:string }) => {
         const p = await this.parkingModel.parkingModel.findOne({ name });
         if (p) {
@@ -81,4 +84,13 @@ export class ParkingService {
             return [];
         }
     };
+    public async findByName(name: string) {
+        try {
+            const parkings = await this.parkingModel.parkingModel.find({ $regex:name,$options:'i' });
+            return parkings;
+        } catch (error: any) {
+            this.logger.error(error.message);
+            return null;
+        }
+    }
 } 
