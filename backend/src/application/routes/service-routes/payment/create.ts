@@ -1,5 +1,5 @@
 // PaymentRoutes.ts
-import { Router, Request, Response } from 'express';
+import express, { Router, Request, Response } from 'express';
 import { PaymentService } from 'application/services/payment';
 import { Ipayment, PaymentModel } from 'application/models/payment/';
 import { Types } from 'mongoose';
@@ -11,10 +11,9 @@ const handleError = (res: Response, error: any) => {
     return res.status(500).json({ error: 'Internal server error.' });
 };
 
-// Initialize PaymentService
+const router = express.Router();
 const paymentService = new PaymentService(PaymentModel);
 
-// Route to create a new payment
 paymentRoutes.post('/payment', async (req: Request, res: Response) => {
     try {
         const paymentData: Ipayment = req.body;
@@ -29,3 +28,5 @@ paymentRoutes.post('/payment', async (req: Request, res: Response) => {
         return handleError(res, error);
     }
 });
+
+export { router as createRouter };

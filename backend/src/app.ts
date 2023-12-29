@@ -1,11 +1,10 @@
 import express, { Request, Response, RequestHandler, NextFunction, json } from 'express';
 
 import { logi } from '@boost';
-import { healthCheckRouter, parkingsRouter, usersRouter, authRouter } from '@routes';
+import { healthCheckRouter, parkingsRouter, usersRouter, authRouter,reservationsRouter,paymentRouter,userLocationRouter,nearestParkingServiceRouter,qrCodeRouter } from '@routes';
 import { ResponseService } from '@services'
 
 const logger = logi(__filename);
-
 const app = express();
 
 app.use((req: Request, res: Response, next: NextFunction) => {
@@ -33,6 +32,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 app.use(healthCheckRouter);
 app.use(parkingsRouter);
 app.use(usersRouter);
+app.use(userLocationRouter);
+app.use(reservationsRouter);
 app.use(authRouter);
 
 app.all('*', async (req, res) => {

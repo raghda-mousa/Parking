@@ -1,10 +1,10 @@
-import { Router } from 'express';
+import express, { Router } from 'express';
 import { NearestParkingService } from 'application/services/NearestParkingService';
 
-const nearestParkingRoutes = Router();
+const router = express.Router();
 const nearestParkingService = new NearestParkingService();
 
-nearestParkingRoutes.get('/nearest-parking/:userId', async (req, res) => {
+router.get('/nearest-parking/:userId', async (req, res) => {
     try {
         const userId = req.params.userId;
         const nearestParking = await nearestParkingService.findNearestParking(userId);
@@ -20,4 +20,4 @@ nearestParkingRoutes.get('/nearest-parking/:userId', async (req, res) => {
     }
 });
 
-export default nearestParkingRoutes;
+export { router as getRouter };
