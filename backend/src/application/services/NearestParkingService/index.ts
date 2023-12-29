@@ -1,6 +1,6 @@
 import { logi } from '@boost';
 import { ParkingModel } from 'application/models/';
-import { UserLocationService } from '../UserLocationService';  
+import { UserLocationService } from '../UserLocation';  
 
 export class NearestParkingService {
     private logger = logi(__filename);

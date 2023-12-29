@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import { query, param } from 'express-validator';
-import { ParkingService, ResponseService } from '@services';
+import { ParkingService, ResponseService } from 'application/services';
 import { Validation } from '@middlewares';
 
 const router = express.Router();
@@ -38,5 +38,45 @@ router.get(
         return ResponseService.sendNotFound(res, `parking-lot with id [${id}] cannot be found`)
     }
 );
+
+router.get('/parkings', async (req: Request, res: Response) => {
+    try {
+        const { page, limit, searchKey } = req.query;
+        const list = await ParkingService.list(page as string, limit as string, searchKey as string);
+
+        return res.status(200).json(list);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Internal server error.' });
+    }
+});
+
+router.get('/parking/details/:userId/:parkingId', async (req: Request, res: Response) => {
+    try {
+        const { userId, parkingId } = req.params;
+        const parkingDetails = await ParkingService.getParkingLotDetails(userId, parkingId);
+
+        if (!parkingDetails) {
+            return res.status(404).json({ error: 'Parking lot details not found.' });
+        }
+
+        return res.status(200).json(parkingDetails);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Internal server error.' });
+    }
+});
+
+router.get('/parkings/search', async (req: Request, res: Response) => {
+    try {
+        const { name } = req.query;
+        const searchResults = await ParkingService.findByName(name as string);
+
+        return res.status(200).json(searchResults);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Internal server error.' });
+    }
+});
 
 export { router as getRouter };

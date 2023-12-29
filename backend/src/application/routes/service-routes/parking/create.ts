@@ -1,9 +1,12 @@
-import express, { Request, Response } from 'express';
+import express, { Router,Request, Response } from 'express';
 import { body } from 'express-validator';
 import { ParkingService, ResponseService } from '@services';
 import { Validation } from '@middlewares';
 import { ECities } from 'application/models/parking/enums';
 
+// parkingRoutes.ts
+
+const parkingService = new ParkingService();
 const router = express.Router();
 
 router.post(

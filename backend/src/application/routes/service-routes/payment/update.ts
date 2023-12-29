@@ -1,9 +1,10 @@
 // PaymentRoutes.ts
-import { Router, Request, Response } from 'express';
+import express, { Router, Request, Response } from 'express';
 import { PaymentService } from 'application/services/payment';
 import { Ipayment, PaymentModel } from 'application/models/payment/';
 import { Types } from 'mongoose';
 
+const router = express.Router();
 const paymentRoutes = Router();
 
 const handleError = (res: Response, error: any) => {
@@ -28,3 +29,5 @@ paymentRoutes.put('/payment/:paymentId', async (req: Request, res: Response) => 
         return handleError(res, error);
     }
 });
+
+export { router as updateRouter };
