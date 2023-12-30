@@ -4,12 +4,12 @@ import { IReservation } from '@models';
 import { ReservationService } from 'application/services/reservation/'; 
 
 const router = express.Router();
-const reservationService = new ReservationService();
 
 router.put('/:reservationId', async (req: Request, res: Response) => {
     const { reservationId } = req.params;
     const parsedReservationId = Types.ObjectId(reservationId);
     const updateData: Partial<IReservation> = req.body;
+    const reservationService = new ReservationService();
     const updatedReservation = await reservationService.updateReservation(parsedReservationId, updateData);
     if (updatedReservation) {
         res.status(200).json({ success: true, reservation: updatedReservation });

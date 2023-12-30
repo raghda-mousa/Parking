@@ -37,8 +37,7 @@ export class ReservationService {
             return null;
         }
     };
-
-    public getReservationById = async (reservationId: Types.ObjectId): Promise<IReservation | null> => {
+    public getReservationById = async (reservationId: string): Promise<IReservation | null> => {
         try {
             const reservation = await this.reservationModel.reservationModel.findById(reservationId);
             return reservation;

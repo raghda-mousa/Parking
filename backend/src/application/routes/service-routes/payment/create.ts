@@ -12,10 +12,10 @@ const handleError = (res: Response, error: any) => {
 };
 
 const router = express.Router();
-const paymentService = new PaymentService(PaymentModel);
 
 paymentRoutes.post('/payment', async (req: Request, res: Response) => {
     try {
+        const paymentService = new PaymentService();        
         const paymentData: Ipayment = req.body;
         const newPayment = await paymentService.createPayment(paymentData);
 

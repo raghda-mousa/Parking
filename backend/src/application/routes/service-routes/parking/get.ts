@@ -42,7 +42,8 @@ router.get(
 router.get('/parkings', async (req: Request, res: Response) => {
     try {
         const { page, limit, searchKey } = req.query;
-        const list = await ParkingService.list(page as string, limit as string, searchKey as string);
+        const parkingService = new ParkingService();
+        const list = await parkingService.list(page as string, limit as string, searchKey as string);
 
         return res.status(200).json(list);
     } catch (error) {
@@ -54,7 +55,8 @@ router.get('/parkings', async (req: Request, res: Response) => {
 router.get('/parking/details/:userId/:parkingId', async (req: Request, res: Response) => {
     try {
         const { userId, parkingId } = req.params;
-        const parkingDetails = await ParkingService.getParkingLotDetails(userId, parkingId);
+        const parkingService = new ParkingService();
+        const parkingDetails = await parkingService.getParkingLotDetails(userId, parkingId);
 
         if (!parkingDetails) {
             return res.status(404).json({ error: 'Parking lot details not found.' });
@@ -70,7 +72,8 @@ router.get('/parking/details/:userId/:parkingId', async (req: Request, res: Resp
 router.get('/parkings/search', async (req: Request, res: Response) => {
     try {
         const { name } = req.query;
-        const searchResults = await ParkingService.findByName(name as string);
+        const parkingService = new ParkingService();
+        const searchResults = await parkingService.findByName(name as string);
 
         return res.status(200).json(searchResults);
     } catch (error) {

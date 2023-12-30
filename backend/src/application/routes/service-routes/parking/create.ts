@@ -6,7 +6,6 @@ import { ECities } from 'application/models/parking/enums';
 
 // parkingRoutes.ts
 
-const parkingService = new ParkingService();
 const router = express.Router();
 
 router.post(

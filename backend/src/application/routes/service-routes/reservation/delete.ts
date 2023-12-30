@@ -4,11 +4,11 @@ import { IReservation } from '@models';
 import { ReservationService } from 'application/services/reservation/'; 
 
 const router = express.Router();
-const reservationService = new ReservationService();
 
 router.delete('/:reservationId', async (req: Request, res: Response) => {
     const { reservationId } = req.params;
     const parsedReservationId = Types.ObjectId(reservationId);
+    const reservationService = new ReservationService();
     const deletionStatus = await reservationService.deleteReservation(parsedReservationId);
     if (deletionStatus) {
         res.status(200).json({ success: true, message: 'Reservation deleted successfully' });

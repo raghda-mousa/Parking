@@ -4,12 +4,12 @@ import { IReservation } from '@models';
 import { ReservationService } from 'application/services/reservation/'; 
 
 const router = express.Router();
-const reservationService = new ReservationService();
 
 router.get('/:reservationId', async (req: Request, res: Response) => {
     const { reservationId } = req.params;
-    const parsedReservationId = Types.ObjectId(reservationId);
-    const reservation = await ReservationService.getReservationById(parsedReservationId);
+    const reservationService = new ReservationService();
+
+    const reservation = await reservationService.getReservationById(reservationId);
     if (reservation) {
         res.status(200).json({ success: true, reservation });
     } else {
@@ -21,6 +21,7 @@ router.get('/:reservationId', async (req: Request, res: Response) => {
 router.get('/user/:userId', async (req: Request, res: Response) => {
     const { userId } = req.params;
     const parsedUserId = Types.ObjectId(userId);
+    const reservationService = new ReservationService();
     const userReservations = await reservationService.getReservationsByUserId(parsedUserId);
     res.status(200).json({ success: true, reservations: userReservations });
 });
@@ -28,6 +29,7 @@ router.get('/user/:userId', async (req: Request, res: Response) => {
 // Get reservations by Parking ID
 router.get('/parking/:parkingId', async (req: Request, res: Response) => {
     const { parkingId } = req.params;
+    const reservationService = new ReservationService();
     const parkingReservations = await reservationService.getReservationsByParkingId(parkingId);
     res.status(200).json({ success: true, reservations: parkingReservations });
 });

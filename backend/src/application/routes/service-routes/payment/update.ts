@@ -12,12 +12,13 @@ const handleError = (res: Response, error: any) => {
     return res.status(500).json({ error: 'Internal server error.' });
 };
 
-const paymentService = new PaymentService(PaymentModel);
+
 
 paymentRoutes.put('/payment/:paymentId', async (req: Request, res: Response) => {
     try {
         const paymentId: Types.ObjectId = Types.ObjectId(req.params.paymentId);
         const updateData: Partial<Ipayment> = req.body;
+        const paymentService = new PaymentService();
         const updatedPayment = await paymentService.updatePayment(paymentId, updateData);
 
         if (!updatedPayment) {

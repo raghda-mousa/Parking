@@ -4,11 +4,11 @@ import { IReservation } from '@models';
 import { ReservationService } from 'application/services/reservation/'; 
 
 const router = express.Router();
-const reservationService = new ReservationService();
 
 // Create reservation
 router.post('/create', async (req: Request, res: Response) => {
     const reservationData: IReservation = req.body;
+    const reservationService = new ReservationService();
     const createdReservation = await reservationService.createReservation(reservationData);
     if (createdReservation) {
         res.status(201).json({ success: true, reservation: createdReservation });

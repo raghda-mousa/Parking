@@ -12,11 +12,10 @@ const handleError = (res: Response, error: any) => {
     return res.status(500).json({ error: 'Internal server error.' });
 };
 
-const paymentService = new PaymentService(PaymentModel);
-
 paymentRoutes.delete('/payment/:paymentId', async (req: Request, res: Response) => {
     try {
         const paymentId: Types.ObjectId = Types.ObjectId(req.params.paymentId);
+        const paymentService = new PaymentService();
         const deleted = await paymentService.deletePayment(paymentId);
 
         if (!deleted) {

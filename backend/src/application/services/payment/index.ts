@@ -1,16 +1,16 @@
-import { Ipayment, IpaymentModel } from 'application/models/payment/';
+import { Ipayment, IpaymentModel, PaymentModel } from 'application/models/payment/';
 import { Types } from 'mongoose';
 
 export class PaymentService {
-    private paymentModel: IpaymentModel;
+    private paymentModel: PaymentModel;
 
-    constructor(paymentModel: IpaymentModel) {
-        this.paymentModel = paymentModel;
+    constructor() {
+        this.paymentModel = new PaymentModel();
     }
 
     public createPayment = async (paymentData: Ipayment): Promise<Ipayment | null> => {
         try {
-            const payment = await this.paymentModel.create(paymentData);
+            const payment = await this.paymentModel.paymentModel.create(paymentData);
             return payment;
         } catch (error) {
             console.error(error);
@@ -18,9 +18,9 @@ export class PaymentService {
         }
     };
 
-    public getPaymentById = async (paymentId: Types.ObjectId): Promise<Ipayment | null> => {
+    public getPaymentById = async (paymentId: string): Promise<Ipayment | null> => {
         try {
-            const payment = await this.paymentModel.findById(paymentId);
+            const payment = await this.paymentModel.paymentModel.findById(paymentId);
             return payment;
         } catch (error) {
             console.error(error);
@@ -30,7 +30,7 @@ export class PaymentService {
 
     public updatePayment = async (paymentId: Types.ObjectId, updateData: Partial<Ipayment>): Promise<Ipayment | null> => {
         try {
-            const payment = await this.paymentModel.findByIdAndUpdate(paymentId, updateData, { new: true });
+            const payment = await this.paymentModel.paymentModel.findByIdAndUpdate(paymentId, updateData, { new: true });
             return payment;
         } catch (error) {
             console.error(error);
@@ -40,7 +40,7 @@ export class PaymentService {
 
     public deletePayment = async (paymentId: Types.ObjectId): Promise<boolean> => {
         try {
-            const result = await this.paymentModel.findByIdAndDelete(paymentId);
+            const result = await this.paymentModel.paymentModel.findByIdAndDelete(paymentId);
             return !!result;
         } catch (error) {
             console.error(error);
@@ -55,7 +55,7 @@ export class PaymentService {
                 limit,
                 sort: { createdAt: -1 },
             };
-            const payments = await this.paymentModel.paginate({}, options);
+            const payments = await this.paymentModel.paymentModel.paginate({}, options);
             return {
                 payments: payments.docs,
                 total: payments.totalDocs,

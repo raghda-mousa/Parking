@@ -4,11 +4,11 @@ import { UserLocationService } from 'application/services/UserLocation';
 
 const router = express.Router();
 const userLocationRoutes = Router();
-const userLocationService = new UserLocationService();
 
 userLocationRoutes.get('/user/location/:userId', async (req: Request, res: Response) => {
     try {
         const { userId } = req.params;
+        const userLocationService = new UserLocationService();
         const userLocation = await userLocationService.getUserLocation(userId);
 
         if (!userLocation) {

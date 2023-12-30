@@ -13,11 +13,10 @@ const handleError = (res: Response, error: any) => {
     return res.status(500).json({ error: 'Internal server error.' });
 };
 
-const paymentService = new PaymentService(PaymentModel);
-
 paymentRoutes.get('/payment/:paymentId', async (req: Request, res: Response) => {
     try {
-        const paymentId: Types.ObjectId = Types.ObjectId(req.params.paymentId);
+        const paymentId: string =req.params.paymentId;
+        const paymentService = new PaymentService();
         const payment = await paymentService.getPaymentById(paymentId);
 
         if (!payment) {
@@ -34,7 +33,7 @@ paymentRoutes.get('/payments', async (req: Request, res: Response) => {
     try {
         const page: number = parseInt(req.query.page as string, 10) || 1;
         const limit: number = parseInt(req.query.limit as string, 10) || 10;
-
+        const paymentService = new PaymentService();
         const { payments, total } = await paymentService.getPayments(page, limit);
 
         return res.status(200).json({ payments, total });

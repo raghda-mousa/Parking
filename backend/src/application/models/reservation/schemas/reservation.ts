@@ -32,9 +32,9 @@ const ReservationSchema = new Schema(
 		createdAt: { type: Date, default: Date.now },
 		updatedAt: { type: Date },
 		createdBy: { type: mongoose.Schema.Types.ObjectId,
-			ref: USERS_MODEL_NAME },
+			ref: 'user' },
 		updatedBy: { type: mongoose.Schema.Types.ObjectId,
-			ref: USERS_MODEL_NAME }
+			ref: 'user' }
 	},
 	{
 		toJSON: {
