@@ -1,47 +1,49 @@
 import { logi } from '@boost'; 
-import { ParkingModel } from 'application/models/'; 
-import { UserLocationService } from 'application/services/UserLocation';
+import { ParkingModel, UserModel } from 'application/models/'; 
 
 export class NearestParkingService {
     private logger = logi(__filename);
     private parkingLotModel: ParkingModel;
-    private userLocationService: UserLocationService;
 
     constructor() {
         this.parkingLotModel = new ParkingModel();
-        this.userLocationService = new UserLocationService();
     }
-
-    public async findNearestParking(userId: string) {
-        try {
-            const userLocation = await this.userLocationService.getUserLocation(userId);
-            
-            if (!userLocation) {
+    
+    public async getCurrentLocation() {
+        if ('geolocation' in navigator) {
+            try {
+                const position = await this.getPosition();
+                return { lat: position.coords.latitude, lon: position.coords.longitude };
+            } catch (error) {
+                console.error('Error getting location:', error);
                 return null;
             }
-            const nearestParking = await this.findNearestParkingLot(userLocation);
-            return nearestParking;
-        } catch (error: any) {
-            this.logger.error(error.message);
+        } else {
+            console.error('Geolocation is not supported');
             return null;
         }
     }
 
-    private async findNearestParkingLot(userLocation: { lat: number, lon: number }) {
+    private getPosition(): Promise<GeolocationPosition> {
+        return new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject);
+        });
+    }
+    public async findParkingWithinDistance(userLocation: { lat: number, lon: number }, distance: number) {
         try {
-            const nearestParkingLot = await this.parkingLotModel.findOne({
+            const nearestParkingLots = await this.parkingLotModel.find({
                 location: {
                     $near: {
                         $geometry: {
                             type: 'Point',
                             coordinates: [userLocation.lon, userLocation.lat]
                         },
-                        $maxDistance: 1000 
+                        $maxDistance: distance  
                     }
                 }
             }).exec();
 
-            return nearestParkingLot;
+            return nearestParkingLots;
         } catch (error: any) {
             this.logger.error(error.message);
             return null;

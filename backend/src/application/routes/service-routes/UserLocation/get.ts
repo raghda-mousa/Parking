@@ -36,6 +36,5 @@ router.get('/user/current-location',
     return res.json(currentLocation);
 });
 
-// export { router as userLocationRoutes };
 
 export { router as getRouter };
