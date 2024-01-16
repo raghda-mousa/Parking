@@ -2,18 +2,24 @@ import express, { Request, Response } from 'express';
 import { Types } from 'mongoose';
 import { IReservation } from '@models';
 import { ReservationService } from 'application/services/reservation/'; 
+import { param } from 'express-validator';
+import { Validation } from '@middlewares';
+import { ResponseService } from '@services';
 
 const router = express.Router();
-const reservationService = new ReservationService();
 
-router.delete('/:reservationId', async (req: Request, res: Response) => {
-    const { reservationId } = req.params;
-    const parsedReservationId = Types.ObjectId(reservationId);
-    const deletionStatus = await reservationService.deleteReservation(parsedReservationId);
+router.delete('/:reservationId', 
+    // param('reservationId').isMongoId().withMessage('reservationId must be a valid id'),
+    Validation.authenticate,
+    Validation.validateRequest,
+    async (req: Request, res: Response) => {
+    const { reservationId } = req.params
+    const reservationService = new ReservationService();
+    const deletionStatus = await reservationService.deleteReservation(reservationId);
     if (deletionStatus) {
-        res.status(200).json({ success: true, message: 'Reservation deleted successfully' });
-    } else {
-        res.status(400).json({ success: false, message: 'Failed to delete reservation' });
+       return ResponseService.sendSuccess(res, deletionStatus,'Reservation deleted successfully' );
+    }  {
+        return ResponseService.sendBadRequest(res,'Failed to delete reservation' );
     }
 });
 

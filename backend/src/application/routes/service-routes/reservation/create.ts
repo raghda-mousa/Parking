@@ -2,18 +2,23 @@ import express, { Request, Response } from 'express';
 import { Types } from 'mongoose';
 import { IReservation } from '@models';
 import { ReservationService } from 'application/services/reservation/'; 
+import { ResponseService } from '@services';
+import { param } from 'express-validator';
+import { Validation } from '@middlewares';
 
 const router = express.Router();
-const reservationService = new ReservationService();
 
-// Create reservation
-router.post('/create', async (req: Request, res: Response) => {
+router.post('/',
+    Validation.authenticate,
+    Validation.validateRequest,
+    async (req: Request, res: Response) => {
     const reservationData: IReservation = req.body;
-    const createdReservation = await reservationService.createReservation(reservationData);
+    const reservationService = new ReservationService();
+    const createdReservation = await reservationService.createReservation({...reservationData,createdBy:req.user.id});
     if (createdReservation) {
-        res.status(201).json({ success: true, reservation: createdReservation });
+        ResponseService.sendSuccess(res,createdReservation,'created successfully')
     } else {
-        res.status(400).json({ success: false, message: 'Failed to create reservation' });
+        ResponseService.sendBadRequest(res,'Failed to create reservation')
     }
 });
 

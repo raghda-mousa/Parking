@@ -4,11 +4,13 @@ import {
     ParkingModel,
     UserModel
 } from '@models'
-import { ECities } from 'application/models/parking/enums';
+import { ECities, EType } from 'application/models/parking/enums';
 import { ReservationService } from '../reservation';
 
-
-
+interface IGeoJSONPoint {
+    type: string;
+    coordinates: number[];
+}
 export class ParkingService {
     private parkingModel: ParkingModel;
     private reservationService : ReservationService;
@@ -18,12 +20,12 @@ export class ParkingService {
         this.reservationService= new ReservationService();
     }
     
-    public create = async ({ name,city,numberOfSlots,userId }: { name: string,city:ECities,numberOfSlots:number,userId:string }) => {
+    public create = async ({ name,city,numberOfSlots,userId ,location}: { name: string,city:ECities,numberOfSlots:number,userId:string ,location:IGeoJSONPoint}) => {
         const p = await this.parkingModel.parkingModel.findOne({ name });
         if (p) {
             return null
         }
-        const parkingLot = await this.parkingModel.parkingModel.create({ name,city,numberOfSlots,createdBy:userId });
+        const parkingLot = await this.parkingModel.parkingModel.create({ name,city,numberOfSlots,createdBy:userId,location });
         return parkingLot
     }
     public list = async (page: string, limit: string, searchKey: string) => {

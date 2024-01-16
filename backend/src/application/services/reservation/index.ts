@@ -11,34 +11,17 @@ export class ReservationService {
         this.barcodeService = new BarcodeService();
     }
 
-    private validateReservationData = (data: IReservation): string[] => {
-        const errors: string[] = [];
-        if (!data.userId) {
-            errors.push('User ID is required.');
-        }
-
-        return errors;
-    };
-
     public createReservation = async (reservationData: IReservation) => {
-        const validationErrors = this.validateReservationData(reservationData);
-        if (validationErrors.length > 0) {
-            console.error('Validation Errors:', validationErrors);
-            return null;
-        }
-
         try {
             const reservation = await this.reservationModel.reservationModel.create(reservationData);
-            const qrcode = await this.barcodeService.generateBarcode(reservation._id);
-            return {...reservation,qrcode};
+            const qrcode = await this.barcodeService.generateBarcode(reservation._id.toString());
+            return {...reservation.toJSON(),qrcode};
         } catch (error) {
-            // Handle other errors (log, throw, etc.)
             console.error(error);
             return null;
         }
     };
-
-    public getReservationById = async (reservationId: Types.ObjectId): Promise<IReservation | null> => {
+    public getReservationById = async (reservationId: string) => {
         try {
             const reservation = await this.reservationModel.reservationModel.findById(reservationId);
             return reservation;
@@ -48,10 +31,7 @@ export class ReservationService {
         }
     };
 
-    public updateReservation = async (
-        reservationId: Types.ObjectId,
-        updateData: Partial<IReservation>
-    ): Promise<IReservation | null> => {
+    public updateReservation = async ( reservationId: string, updateData: Partial<IReservation>) => {
         try {
             const reservation = await this.reservationModel.reservationModel.findByIdAndUpdate(reservationId, updateData, { new: true });
             return reservation;
@@ -61,17 +41,21 @@ export class ReservationService {
         }
     };
 
-    public deleteReservation = async (reservationId: Types.ObjectId): Promise<boolean> => {
+    public deleteReservation = async (id:  string)=> {
         try {
-            const result = await this.reservationModel.reservationModel.findByIdAndDelete(reservationId);
-            return !!result;
+            const p = await this.reservationModel.reservationModel.findById(id);
+            if(!p){
+                return null
+            }
+            const result = await this.reservationModel.reservationModel.findByIdAndUpdate(id, { $set: { status: EReservationStatus.ENDED } }, { new: true });
+            return result;
         } catch (error) {
             console.error(error);
             return false;
         }
     };
 
-    public getReservationsByUserId = async (userId: Types.ObjectId): Promise<IReservation[]> => {
+    public getReservationsByUserId = async (userId: string)=> {
         try {
             const reservations = await this.reservationModel.reservationModel.find({ userId });
             return reservations;
@@ -80,7 +64,7 @@ export class ReservationService {
             return [];
         }
     };
-    public getReservationsByParkingId = async (parkingId: string): Promise<IReservation[]> => {
+    public getReservationsByParkingId = async (parkingId: string) => {
         try {
             const reservations = await this.reservationModel.reservationModel.find({ parkingId,status:EReservationStatus.ACTIVE });
             return reservations;

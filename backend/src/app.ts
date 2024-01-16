@@ -1,7 +1,16 @@
 import express, { Request, Response, RequestHandler, NextFunction, json } from 'express';
 
 import { logi } from '@boost';
-import { healthCheckRouter, parkingsRouter, usersRouter, authRouter,reservationsRouter,paymentRouter,userLocationRouter,nearestParkingServiceRouter,qrCodeRouter } from '@routes';
+import { healthCheckRouter,
+   parkingsRouter, 
+   usersRouter, 
+   authRouter,
+   reservationsRouter,
+   paymentRouter,
+   userLocationRouter,
+   nearestParkingServiceRouter,
+   qrCodeRouter
+   } from '@routes';
 import { ResponseService } from '@services'
 
 const logger = logi(__filename);
@@ -34,15 +43,15 @@ app.use(parkingsRouter);
 app.use(usersRouter);
 app.use(userLocationRouter);
 app.use(reservationsRouter);
+app.use(paymentRouter);
 app.use(authRouter);
+app.use(nearestParkingServiceRouter);
+app.use(qrCodeRouter);
 
 app.all('*', async (req, res) => {
   ResponseService.sendNotFound(res, "Not Found")
 });
 
-const PORT = 3000;
-app.listen(PORT, () => {
-  logger.info('Server is running on port ${PORT}');
-});
 
 export { app };
+

@@ -1,33 +1,27 @@
-// PaymentRoutes.ts
 import express, { Router, Request, Response } from 'express';
 import { PaymentService } from 'application/services/payment';
 import { Ipayment, PaymentModel } from 'application/models/payment/';
 import { Types } from 'mongoose';
+import { body } from 'express-validator';
+import { Validation } from '@middlewares';
+import { ResponseService } from '@services';
 
 const router = express.Router();
-const paymentRoutes = Router();
 
-const handleError = (res: Response, error: any) => {
-    console.error(error);
-    return res.status(500).json({ error: 'Internal server error.' });
-};
-
-const paymentService = new PaymentService(PaymentModel);
-
-paymentRoutes.put('/payment/:paymentId', async (req: Request, res: Response) => {
-    try {
-        const paymentId: Types.ObjectId = Types.ObjectId(req.params.paymentId);
-        const updateData: Partial<Ipayment> = req.body;
+router.put('/:paymentId',
+    body('paymentAmount').notEmpty().withMessage('paymentAmount must be provided').isInt().withMessage('paymentAmount must be a valid number'),
+    Validation.authenticate,
+    Validation.validateRequest,
+    async (req: Request, res: Response) => {
+        const {status } = req.body
+        const {paymentId}= req.params;
+        const updateData= req.body;
+        const paymentService = new PaymentService();
         const updatedPayment = await paymentService.updatePayment(paymentId, updateData);
-
-        if (!updatedPayment) {
-            return res.status(404).json({ error: 'Payment not found.' });
+        if (updatedPayment) {
+            return ResponseService.sendSuccess(res,updatedPayment,'updated Payment');
         }
-
-        return res.status(200).json(updatedPayment);
-    } catch (error) {
-        return handleError(res, error);
-    }
+        return ResponseService.sendNotFound(res,'Payment not found.' );
 });
 
 export { router as updateRouter };

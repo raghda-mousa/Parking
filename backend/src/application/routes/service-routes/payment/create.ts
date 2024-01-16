@@ -1,32 +1,28 @@
-// PaymentRoutes.ts
 import express, { Router, Request, Response } from 'express';
 import { PaymentService } from 'application/services/payment';
+import { ResponseService } from 'application/services/';
 import { Ipayment, PaymentModel } from 'application/models/payment/';
 import { Types } from 'mongoose';
-
-const paymentRoutes = Router();
-
-const handleError = (res: Response, error: any) => {
-    console.error(error);
-    return res.status(500).json({ error: 'Internal server error.' });
-};
+import { Validation } from '@middlewares';
+import { body } from 'express-validator';
+import { EPaymentGateway, EPaymentType } from 'application/models/payment/enums';
 
 const router = express.Router();
-const paymentService = new PaymentService(PaymentModel);
-
-paymentRoutes.post('/payment', async (req: Request, res: Response) => {
-    try {
+router.post(
+    '/create/reservationId/:reservationId',
+    body('paymentAmount').notEmpty().isInt().bail().withMessage('paymnentAmount must be a valid amount'),
+    body('gateway').notEmpty().withMessage('gateway must be provided').bail().isIn(Object.values(EPaymentGateway)).withMessage(`gateway must be a valid gateway of ${Object.values(EPaymentGateway).join(',')}`),
+    Validation.authenticate,
+    Validation.validateRequest,
+    async (req: Request, res: Response) => {
+        const paymentService = new PaymentService();        
         const paymentData: Ipayment = req.body;
-        const newPayment = await paymentService.createPayment(paymentData);
-
+        const newPayment = await paymentService.createPayment({...paymentData,createdBy:req.user.id});
         if (!newPayment) {
-            return res.status(400).json({ error: 'Failed to create payment.' });
+            return ResponseService.sendBadRequest(res, 'Failed to create payment.');
         }
-
-        return res.status(201).json(newPayment);
-    } catch (error) {
-        return handleError(res, error);
-    }
+       return ResponseService.sendCreated(res, 'newPayment');
 });
 
 export { router as createRouter };
+

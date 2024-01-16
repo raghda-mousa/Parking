@@ -13,10 +13,10 @@ interface IReservationModel extends PaginateModel< IReservationDoc> {
 
 const ReservationSchema = new Schema(
 	{
-		userId: {
-			type: mongoose.Schema.Types.ObjectId,
-			ref: USERS_MODEL_NAME
-		  },
+		// userId: {
+		// 	type: mongoose.Schema.Types.ObjectId,
+		// 	ref: 'user'
+		//   },
 		parkingId: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: PARKING_MODEL_NAME
@@ -27,14 +27,15 @@ const ReservationSchema = new Schema(
 			enum: EReservationStatus,
 			default: EReservationStatus.PENDING
 		  },
+		cost:{type: Number},
 		sartTime: { type: Date },
 		endTime: { type: Date },
 		createdAt: { type: Date, default: Date.now },
 		updatedAt: { type: Date },
 		createdBy: { type: mongoose.Schema.Types.ObjectId,
-			ref: USERS_MODEL_NAME },
+			ref: 'user' },
 		updatedBy: { type: mongoose.Schema.Types.ObjectId,
-			ref: USERS_MODEL_NAME }
+			ref: 'user' }
 	},
 	{
 		toJSON: {

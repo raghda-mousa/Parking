@@ -1,6 +1,7 @@
 export interface IReservation {
-	cost:Number;
+	cost:number;
 	parkingId: string;
-	userId: string;
+	createdBy: string;
 	sartTime?: Date;
+	
 }

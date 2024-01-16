@@ -15,11 +15,11 @@ interface IpaymentModel extends PaginateModel<IpaymentDoc> {
 }
 const PaymentSchema = new Schema(
 	{
-		RESERVATION_ID:{
+		reservationId:{
 			type: mongoose.Schema.Types.ObjectId,
 			ref: RESERVATION_MODEL_NAME
 		},
-		payment_amount:{
+		paymentAmount:{
             type: Number,
         },
 		status: {
@@ -42,9 +42,9 @@ const PaymentSchema = new Schema(
 		createdAt: { type: Date, default: Date.now },
 		updatedAt: { type: Date },
 		createdBy: { type: mongoose.Schema.Types.ObjectId,
-			ref: USERS_MODEL_NAME },
+			ref: 'user' },
 		updatedBy: { type: mongoose.Schema.Types.ObjectId,
-			ref: USERS_MODEL_NAME }
+			ref: 'user' }
 	},
     {
 		toJSON: {
