@@ -1,44 +1,51 @@
 // PaymentRoutes.ts
-import express, { Router, Request, Response } from 'express';
+import express, { Router, Request, Response, query } from 'express';
 import { PaymentService } from 'application/services/payment';
 import { Ipayment } from 'application/models/payment/';
 import {  PaymentModel } from 'application/models/payment/';
 import { Types } from 'mongoose';
+import { ResponseService } from '@services';
+import { Validation } from '@middlewares';
+import { body, param } from 'express-validator';
 
 const router = express.Router();
-const paymentRoutes = Router();
 
-const handleError = (res: Response, error: any) => {
-    console.error(error);
-    return res.status(500).json({ error: 'Internal server error.' });
-};
-
-paymentRoutes.get('/payment/:paymentId', async (req: Request, res: Response) => {
+router.get('/:paymentId',
+    param('paymentId').isMongoId().withMessage('paymentId must be a valid id'),
+    Validation.authenticate,
+    Validation.validateRequest,
+    async (req: Request, res: Response) => {
     try {
         const paymentId: string =req.params.paymentId;
         const paymentService = new PaymentService();
         const payment = await paymentService.getPaymentById(paymentId);
 
         if (!payment) {
-            return res.status(404).json({ error: 'Payment not found.' });
+            return ResponseService.sendNotFound(res, 'Payment not found.');
         }
 
-        return res.status(200).json(payment);
+        return ResponseService.sendSuccess(res, payment, 'Payment retrieved successfully');
     } catch (error) {
-        return handleError(res, error);
+        return ResponseService.sendInternalServerError(res, 'Internal server error.' );
     }
 });
 
-paymentRoutes.get('/payments', async (req: Request, res: Response) => {
+router.get(
+    '/',
+    body('limit').optional().isInt({ min: 10, max: 50 }).withMessage('limit must be between 10 and 50'),
+    Validation.authenticate,
+    Validation.validateRequest,
+    async (req: Request, res: Response) => {
     try {
         const page: number = parseInt(req.query.page as string, 10) || 1;
         const limit: number = parseInt(req.query.limit as string, 10) || 10;
         const paymentService = new PaymentService();
         const { payments, total } = await paymentService.getPayments(page, limit);
 
-        return res.status(200).json({ payments, total });
+        return ResponseService.sendSuccess(res, payments, 'Payments retrieved successfully');
+
     } catch (error) {
-        return handleError(res, error);
+        return ResponseService.sendInternalServerError(res, 'Internal server error.' );
     }
 });
 

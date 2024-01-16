@@ -3,7 +3,6 @@ export enum EPaymentStatus {
 	SUCCESS = "SUCCESS",
 	FAILED = "FAILED"
 }
-
 export enum EPaymentType {
 	CASH ="CASH",
 	CREDITCARD ="CREDIT_CARD",

@@ -1,37 +1,53 @@
 import express, { Request, Response } from 'express';
 import { Types } from 'mongoose';
 import { IReservation } from '@models';
+import { UserService } from '@services';
 import { ReservationService } from 'application/services/reservation/'; 
+import { param } from 'express-validator';
+import { Validation } from '@middlewares';
+import { ResponseService } from '@services';
 
 const router = express.Router();
 
-router.get('/:reservationId', async (req: Request, res: Response) => {
+router.get('/:reservationId',
+    param('reservationId').isMongoId().withMessage('reservationId must be a valid id'),
+    Validation.authenticate,
+    Validation.validateRequest,
+     async (req: Request, res: Response) => {
     const { reservationId } = req.params;
     const reservationService = new ReservationService();
 
     const reservation = await reservationService.getReservationById(reservationId);
     if (reservation) {
-        res.status(200).json({ success: true, reservation });
+        ResponseService.sendSuccess(res,reservation,'Reservation found');
     } else {
-        res.status(404).json({ success: false, message: 'Reservation not found' });
+        ResponseService.sendNotFound(res,'Reservation not found' );
     }
 });
 
-// Get reservations by User ID
-router.get('/user/:userId', async (req: Request, res: Response) => {
-    const { userId } = req.params;
-    const parsedUserId = Types.ObjectId(userId);
+
+router.get('/getByUserId/:userId',
+    param('userId').isMongoId().withMessage('userId must be a valid id'),
+    Validation.authenticate,
+    Validation.validateRequest,
+     async (req: Request, res: Response) => {
+    const { userId } = req.params
     const reservationService = new ReservationService();
-    const userReservations = await reservationService.getReservationsByUserId(parsedUserId);
-    res.status(200).json({ success: true, reservations: userReservations });
+    const userService = new UserService();
+    const userReservations = await userService.getUserById(userId);
+    ResponseService.sendSuccess(res,userReservations,'userReservation found');
 });
 
-// Get reservations by Parking ID
-router.get('/parking/:parkingId', async (req: Request, res: Response) => {
+
+router.get('/getByParkingId/:parkingId',
+    param('parkingId').isMongoId().withMessage('parkingId must be a valid id'),
+    Validation.authenticate,
+    Validation.validateRequest,
+    async (req: Request, res: Response) => {
     const { parkingId } = req.params;
     const reservationService = new ReservationService();
     const parkingReservations = await reservationService.getReservationsByParkingId(parkingId);
-    res.status(200).json({ success: true, reservations: parkingReservations });
-});
+    ResponseService.sendSuccess(res,parkingReservations,'parkingReservation found');
 
+});
 export { router as getRouter };

@@ -15,11 +15,11 @@ interface IpaymentModel extends PaginateModel<IpaymentDoc> {
 }
 const PaymentSchema = new Schema(
 	{
-		RESERVATION_ID:{
+		reservationId:{
 			type: mongoose.Schema.Types.ObjectId,
 			ref: RESERVATION_MODEL_NAME
 		},
-		payment_amount:{
+		paymentAmount:{
             type: Number,
         },
 		status: {

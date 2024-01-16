@@ -21,16 +21,18 @@ interface IParkingModel extends PaginateModel<IParkingDoc> {
 // })
 // location.ts
 
-const locationSchema = new Schema<Location>({
-    type: {
-        type: String,
-        default: 'Point' 
-    },
-    coordinates: {
-        type: [Number],
-        required: true 
-    },
-});
+const locationSchema = new Schema<Location>( {
+	type: {
+	  type: String,
+	  enum: ['Point'],
+	  required: true
+	},
+	coordinates: {
+	  type: [Number],
+	  required: true
+	}
+  });
+  
 
 locationSchema.index({ coordinates: '2dsphere' }); 
 

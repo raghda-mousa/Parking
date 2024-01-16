@@ -9,6 +9,10 @@ export class ResponseService {
         res.status(201).send({ success: true, data: message });
     }
 
+    static successfullResponse(res: Response, message: string) {
+        res.status(204).send({ success: true, data: message });
+    }
+
     static sendBadRequest(res: Response, message: string, errors?: any) {
         res.status(400).send({ success: false, message, errors });
     }
@@ -31,6 +35,10 @@ export class ResponseService {
     static sendAlreadyCreated(res: Response, message: string, errors?: any) {
         res.status(500).send({ success: false, message, errors });
     }
+    // static handleError = (res: Response, error: any) => {
+    //     console.error(error);
+    //     return res.status(500).json({ error: 'Internal server error.' });
+    // };
 }
 
 export default ResponseService;

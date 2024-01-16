@@ -1,11 +1,11 @@
-import { logi } from '@boost';
-import { ParkingModel } from 'application/models/';
-import { UserLocationService } from '../UserLocation';  
+import { logi } from '@boost'; 
+import { ParkingModel } from 'application/models/'; 
+import { UserLocationService } from 'application/services/UserLocation';
 
 export class NearestParkingService {
     private logger = logi(__filename);
     private parkingLotModel: ParkingModel;
-    private userLocationService: UserLocationService; 
+    private userLocationService: UserLocationService;
 
     constructor() {
         this.parkingLotModel = new ParkingModel();
@@ -14,15 +14,12 @@ export class NearestParkingService {
 
     public async findNearestParking(userId: string) {
         try {
-            // Get user location
             const userLocation = await this.userLocationService.getUserLocation(userId);
             
             if (!userLocation) {
                 return null;
             }
-
             const nearestParking = await this.findNearestParkingLot(userLocation);
-
             return nearestParking;
         } catch (error: any) {
             this.logger.error(error.message);
@@ -32,7 +29,6 @@ export class NearestParkingService {
 
     private async findNearestParkingLot(userLocation: { lat: number, lon: number }) {
         try {
-            // Use a geo-spatial query to find the nearest parking lot
             const nearestParkingLot = await this.parkingLotModel.findOne({
                 location: {
                     $near: {
@@ -40,7 +36,7 @@ export class NearestParkingService {
                             type: 'Point',
                             coordinates: [userLocation.lon, userLocation.lat]
                         },
-                        $maxDistance: 1000  // Max distance in meters, adjust as needed
+                        $maxDistance: 1000 
                     }
                 }
             }).exec();

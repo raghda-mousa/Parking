@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { query, param } from 'express-validator';
+import { query, param, body } from 'express-validator';
 import { ParkingService, ResponseService } from 'application/services';
 import { Validation } from '@middlewares';
 
@@ -39,46 +39,43 @@ router.get(
     }
 );
 
-router.get('/parkings', async (req: Request, res: Response) => {
-    try {
-        const { page, limit, searchKey } = req.query;
-        const parkingService = new ParkingService();
-        const list = await parkingService.list(page as string, limit as string, searchKey as string);
-
-        return res.status(200).json(list);
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ error: 'Internal server error.' });
-    }
-});
-
-router.get('/parking/details/:userId/:parkingId', async (req: Request, res: Response) => {
+router.get(
+    '/parking/details/:userId/:parkingId',
+    param('parkingId').isMongoId().withMessage('Parking ID must be a valid MongoDB ID'),
+    Validation.authenticate,
+    Validation.validateRequest,
+    async (req: Request, res: Response) => {
     try {
         const { userId, parkingId } = req.params;
         const parkingService = new ParkingService();
         const parkingDetails = await parkingService.getParkingLotDetails(userId, parkingId);
 
         if (!parkingDetails) {
-            return res.status(404).json({ error: 'Parking lot details not found.' });
+            return ResponseService.sendNotFound(res, `parking-lot with id [${parkingId}] cannot be found`);
         }
 
-        return res.status(200).json(parkingDetails);
+        ResponseService.sendSuccess(res, parkingDetails, 'Retrieved parking details successfully');
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: 'Internal server error.' });
+        return ResponseService.sendInternalServerError(res, 'Internal server error');
     }
 });
 
-router.get('/parkings/search', async (req: Request, res: Response) => {
+router.get('/parkings/search', 
+    body('name').notEmpty().withMessage('name must be provided').bail().isString().withMessage('name must be a valid string'),
+    Validation.authenticate,
+    Validation.validateRequest,
+    async (req: Request, res: Response) => {
     try {
         const { name } = req.query;
         const parkingService = new ParkingService();
         const searchResults = await parkingService.findByName(name as string);
 
-        return res.status(200).json(searchResults);
+        return ResponseService.sendSuccess(res, searchResults, 'Retrieved search results successfully');
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: 'Internal server error.' });
+        return ResponseService.sendInternalServerError(res, 'Internal server error');
+
     }
 });
 

@@ -35,7 +35,7 @@ export class UserService {
         if (!user || !(await bcrypt.compare(password, user.password))) {
             return null
         }
-        const token = jwt.sign({ name: user.name, email: user.email,type:user.type }, EnvironementService.jwtConfig.secret);
+        const token = jwt.sign({ name: user.name, email: user.email,type:user.type,id:user._id }, EnvironementService.jwtConfig.secret);
         return { token,type:user.type }
     }
     public getUserById = async (id: string) => {

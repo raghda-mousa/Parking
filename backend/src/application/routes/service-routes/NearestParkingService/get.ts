@@ -1,22 +1,29 @@
 import express, { Router } from 'express';
 import { NearestParkingService } from 'application/services/NearestParkingService';
+import { Request, Response } from 'express';
+import { ResponseService } from '@services';
+import { Validation } from '@middlewares';
+import { param } from 'express-validator';
 
 const router = express.Router();
-const nearestParkingService = new NearestParkingService();
-
-router.get('/nearest-parking/:userId', async (req, res) => {
+router.get('/:userId', 
+    param('userId').isMongoId().withMessage('userId must be a valid id'),
+    Validation.authenticate, 
+    Validation.validateRequest,
+    async (req: Request, res: Response) => {
     try {
         const userId = req.params.userId;
+        const nearestParkingService = new NearestParkingService();
         const nearestParking = await nearestParkingService.findNearestParking(userId);
 
         if (!nearestParking) {
-            return res.status(404).json({ error: 'No nearest parking found.' });
+            return ResponseService.sendNotFound(res, 'No nearest parking found.');
         }
 
-        return res.status(200).json(nearestParking);
+        return ResponseService.sendSuccess(res, nearestParking, 'Nearest parking found successfully');
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: 'Internal server error.' });
+        return ResponseService.sendInternalServerError(res, 'Internal server error.'); 
     }
 });
 

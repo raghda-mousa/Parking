@@ -10,3 +10,12 @@ export enum ECities {
 	NABLUS = 'NABLUS',
 	//.....
 }
+
+export enum EType{
+	Point = 'Point',
+  MultiPoint = 'MultiPoint',
+  LineString = 'LineString',
+  MultiLineString = 'MultiLineString',
+  Polygon = 'Polygon',
+  MultiPolygon = 'MultiPolygon'
+}
