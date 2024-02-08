@@ -6,7 +6,7 @@ import QRCode from 'react-native-qrcode-svg';
 import { WebView } from 'react-native-webview';
 import ArrowBackIcon from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios'; 
+import axios from 'axios';
 import backgroundImage from '../assets/booking.jpeg';
 
 const styles = StyleSheet.create({
@@ -161,6 +161,17 @@ const styles = StyleSheet.create({
         fontSize: 25,
         fontWeight: 'bold',
     },
+    text: {
+        alignItems: 'center',
+        marginTop: 0,
+        marginBottom:1,
+        width:370,
+        fontSize: 25,
+        fontWeight: 'bold',
+        backgroundColor: 'white',
+        borderWidth:1,
+        borderkColor:'black',
+    },
     Booking3: {
         alignItems: 'center',
         fontSize: 20,
@@ -187,7 +198,7 @@ const styles = StyleSheet.create({
     buttonCancel: {
         backgroundColor: 'white',
         borderColor: 'grey',
-        borderWidth:1,
+        borderWidth: 2,
         padding: 11,
         borderRadius: 25,
         width: 380,
@@ -226,7 +237,10 @@ const styles = StyleSheet.create({
     },
     qrCodeContainer: {
         alignItems: 'center',
-    }
+    },
+    cancelContainer: {
+        margin: 30,
+            }
 });
 
 function MyBooking({ route }) {
@@ -330,71 +344,80 @@ function MyBooking({ route }) {
         }
     };
 
-    const handleButtonPress = () => {
-        setIsLinkOpened(true);
-    };
     const onWebViewClose = () => {
         setIsLinkOpened(false);
     };
     console.log({ selectedParking })
 
+    const renderCancelButton = () => (
+        <TouchableOpacity
+            style={styles.buttonCancel }
+            onPress={handleCancelPress}
+        >
+            <Text style={styles.buttonTextCancel}> Cancel</Text>
+        </TouchableOpacity>
+    );
     return (
         <ImageBackground source={backgroundImage} style={styles.backgroundImage}>
-        <View style={[styles.Booking, { position: 'relative' }]}>
-            {selectedParking ? (
-                <>
-                    <Text style={styles.name}>Parking Name: {selectedParking.name}{selectedParking.title}</Text>
+            <View style={[styles.Booking, { position: 'relative' }]}>
+                {selectedParking ? (
+                    <>
+                        <Text style={styles.name}>Parking Name: {selectedParking.name}{selectedParking.title}</Text>
 
-                    <Text style={styles.price}>Price: {selectedParking.chargePerMinute}{selectedParking.parkingPrice}</Text>
-                    {qrCode && (
-                        <View style={styles.qrCodeContainer}>
-                            <QRCode
-                                value={qrCode}
-                                size={370}
-                                color="black"
-                                backgroundColor="white"
-                            />
-                        </View>
-                    )}
-                    <View style={styles.buttonContainer}>
-                        <Pressable
-                            style={styles.buttonConfirm}
-                            onPress={handleConfirmPress}
-                        >
-                            <Text style={styles.buttonTextConfirm}> Confirm</Text>
-                        </Pressable>
+                        <Text style={styles.price}>Price: {selectedParking.chargePerMinute}{selectedParking.parkingPrice}</Text>
+                        {qrCode && (
+                            <View style={styles.qrCodeContainer}>
+                                <Text style={styles.text}>Please use this code to enter and exit the parking</Text>
+                                <QRCode
+                                    value={qrCode}
+                                    size={370}
+                                    color="black"
+                                    backgroundColor="white"
+                                />
+                                <View style={styles.cancelContainer}>
+                                    {renderCancelButton()}
+                                    </View>
+                            </View>
+                        )}
+                        <View style={styles.buttonContainer}>
+                            <Pressable
+                                style={styles.buttonConfirm}
+                                onPress={handleConfirmPress}
+                            >
+                                <Text style={styles.buttonTextConfirm}> Confirm</Text>
+                            </Pressable>
 
-                        <TouchableOpacity
-                            style={styles.buttonCancel}
-                            onPress={handleCancelPress}
-                        >
-                            <Text style={styles.buttonTextCancel}> Cancel</Text>
-                        </TouchableOpacity>
-                    </View>
-                    {qrCode && !isLinkOpened && (
-                        <View style={styles.qrCodeContainer}>
-                            <QRCode
-                                value={qrCode}
-                                size={370}
-                                color="black"
-                                backgroundColor="white"
-                            />
+                            <TouchableOpacity
+                                style={styles.buttonCancel}
+                                onPress={handleCancelPress}
+                            >
+                                <Text style={styles.buttonTextCancel}> Cancel</Text>
+                            </TouchableOpacity>
                         </View>
-                    )}
-                </>
-            ) : (
-                        <Text style={styles.Booking3}>Embark on your journey to the homepage and reserving your parking!</Text>
-            )}
-            {showPaymentPage &&
-                <View style={{ position: 'absolute', top: 20, left: -46, right: 10, zIndex: 99999, flex: 1, backgroundColor: 'red', borderWidth: 1, borderColor: 'Green', width: 450, height: 900 }}>
-                    {renderBackButton()}
+                        {qrCode && !isLinkOpened && (
+                            <View style={styles.qrCodeContainer}>
+                                <QRCode
+                                    value={qrCode}
+                                    size={370}
+                                    color="black"
+                                    backgroundColor="white"
+                                />
+                            </View>
+                        )}
+                    </>
+                ) : (
+                    <Text style={styles.Booking3}>Embark on your journey to the homepage and reserving your parking!</Text>
+                )}
+                {showPaymentPage &&
+                    <View style={{ position: 'absolute', top: 20, left: -46, right: 10, zIndex: 99999, flex: 1, backgroundColor: 'red', borderWidth: 1, borderColor: 'Green', width: 450, height: 900 }}>
+                        {renderBackButton()}
                         <WebView
                             style={{ flex: 1 }}
                             source={{ uri: 'https://www.sandbox.paypal.com/signin' }}
                             onClose={onWebViewClose}
                         />
-                </View>
-            }
+                    </View>
+                }
             </View>
         </ImageBackground>
     );

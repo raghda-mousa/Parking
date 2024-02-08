@@ -14,7 +14,9 @@ import MapViewDirections from 'react-native-maps-directions';
 import Main from './MainScreen';
 import { MyBooking } from './src/mybooking';
 
+
 import { createStackNavigator } from '@react-navigation/stack';
+
 
 const styles = StyleSheet.create({
   button: {
@@ -578,7 +580,7 @@ const UserDataScreen = () => {
         <Text style={styles.Text}>Email: {userData.email}</Text>
         <TouchableOpacity style={styles.button} onPress={handleLogout}>
           <Text style={styles.buttonText}>Log Out</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> 
       </View>
     </ImageBackground>
   );
@@ -590,6 +592,7 @@ function MyTabs() {
   const Stack = createStackNavigator();
   const [userId, setUserId] = useState(null);
   return (
+    
     <Tab.Navigator screenOptions={{ headerShown: false }}>
       <Tab.Screen name="Home" component={HomeScreen}
         options={{
@@ -620,17 +623,10 @@ function MyTabs() {
           ),
         }}
       />
-      <Tab.Screen name="He">
-        {() => (
-          <Stack.Navigator>
-            <Stack.Screen name="Home" component={UserDataScreen} />
-           
-            <Stack.Screen name="Details" component={Main} />
-          </Stack.Navigator>
-        )}
-      </Tab.Screen>
-    </Tab.Navigator>
-  );
+      
+      </Tab.Navigator>
+     
+      );
 }
 
 export default function App({ userId }) {
