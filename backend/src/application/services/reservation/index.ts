@@ -11,16 +11,39 @@ export class ReservationService {
         this.barcodeService = new BarcodeService();
     }
 
+    // public createReservation = async (reservationData: IReservation) => {
+    //     try {
+    //         // Inside createReservation method
+    //         const reservation = await this.reservationModel.reservationModel.create(reservationData);
+    //         const qrcode = await this.barcodeService.generateBarcode(reservation._id.toString());
+    //         reservation.qrcode = qrcode; // Assign the generated QR code to the reservation object
+    //         await reservation.save(); // Save the reservation object with the QR code
+    //         return { ...reservation.toJSON(), qrcode };
+    //     } catch (error) {
+    //         console.error(error);
+    //         return null;
+    //     }
+    // };
     public createReservation = async (reservationData: IReservation) => {
         try {
+            // Inside createReservation method
             const reservation = await this.reservationModel.reservationModel.create(reservationData);
+
+            if (!reservation) {
+                console.error("Failed to create reservation");
+                return null;
+            }
+
             const qrcode = await this.barcodeService.generateBarcode(reservation._id.toString());
-            return {...reservation.toJSON(),qrcode};
+            reservation.qrCode = qrcode as string; // Assign the generated QR code to the reservation object
+            await reservation.save(); 
+            return { ...reservation.toJSON(), qrcode };
         } catch (error) {
             console.error(error);
             return null;
         }
     };
+
     public getReservationById = async (reservationId: string) => {
         try {
             const reservation = await this.reservationModel.reservationModel.findById(reservationId);

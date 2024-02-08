@@ -13,19 +13,19 @@ interface IGeoJSONPoint {
 }
 export class ParkingService {
     private parkingModel: ParkingModel;
-    private reservationService : ReservationService;
+    private reservationService: ReservationService;
     private logger = logi(__filename);
     constructor() {
         this.parkingModel = new ParkingModel();
-        this.reservationService= new ReservationService();
+        this.reservationService = new ReservationService();
     }
-    
-    public create = async ({ name,city,numberOfSlots,userId ,location}: { name: string,city:ECities,numberOfSlots:number,userId:string ,location:IGeoJSONPoint}) => {
+
+    public create = async ({ name, city, numberOfSlots, userId, location }: { name: string, city: ECities, numberOfSlots: number, userId: string, location: IGeoJSONPoint }) => {
         const p = await this.parkingModel.parkingModel.findOne({ name });
         if (p) {
             return null
         }
-        const parkingLot = await this.parkingModel.parkingModel.create({ name,city,numberOfSlots,createdBy:userId,location });
+        const parkingLot = await this.parkingModel.parkingModel.create({ name, city, numberOfSlots, createdBy: userId, location });
         return parkingLot
     }
     public list = async (page: string, limit: string, searchKey: string) => {
@@ -49,6 +49,24 @@ export class ParkingService {
         const parkingLot = await this.parkingModel.parkingModel.findByIdAndUpdate(id, { $set: { name } }, { new: true });
         return parkingLot
     }
+    public findAndUpdate = async ({ id, numberOfSlots }: { id: string, numberOfSlots: number }) => {
+        const p = await this.parkingModel.parkingModel.findById(id);
+        if (!p) {
+            return null;
+        }
+
+        const updatedNumberOfSlots = numberOfSlots - 1;
+
+        const parkingLot = await this.parkingModel.parkingModel.findByIdAndUpdate(
+            id,
+            { $set: { numberOfSlots: updatedNumberOfSlots } },
+            { new: true }
+        );
+
+        return parkingLot;
+    };
+
+
     public findByIdAndDelete = async (id: string) => {
         const p = await this.parkingModel.parkingModel.findById(id);
         if (!p) {
@@ -67,16 +85,14 @@ export class ParkingService {
             return null
         }
     }
-    public getAvailableParkingLots = async (parkingId:string) => {
+    public getAvailableParkingLots = async (parkingId: string) => {
         try {
             const parking = await this.parkingModel.parkingModel.findById(parkingId);
-            if(!parking)
-            {
+            if (!parking) {
                 return null
             }
             const reservations = await this.reservationService.getReservationsByParkingId(parkingId);
-            if(!reservations)
-            {
+            if (!reservations) {
                 return parking.numberOfSlots;
             }
 
@@ -88,7 +104,7 @@ export class ParkingService {
     };
     public async findByName(name: string) {
         try {
-            const parkings = await this.parkingModel.parkingModel.find({ $regex:name,$options:'i' });
+            const parkings = await this.parkingModel.parkingModel.find({ name: { $regex: name, $options: 'i' } });
             return parkings;
         } catch (error: any) {
             this.logger.error(error.message);
@@ -99,15 +115,15 @@ export class ParkingService {
     public async getParkingLotDetails(userId: string, parkingId: string) {
         try {
             const parking = await this.parkingModel.parkingModel.findOne({ _id: parkingId, owner: userId }).exec();
-    
+
             if (!parking) {
                 return null;
             }
 
             const reservations = await this.reservationService.getReservationsByParkingId(parkingId);
-            const { name, numberOfSlots,chargePerMinute } = parking;
+            const { name, numberOfSlots, chargePerMinute } = parking;
             const emptySlots = numberOfSlots - reservations.length;;
-    
+
             return {
                 name,
                 chargePerMinute,
@@ -119,8 +135,8 @@ export class ParkingService {
             return null;
         }
     }
-    
-    
+
+
 }
 
 

@@ -21,6 +21,25 @@ router.put(
         return ResponseService.sendAlreadyCreated(res, `parking lot with id [${id}] cannot be found`)
     }
 );
+router.put(
+    '/slot/:id',
+    body('numberOfSlots').notEmpty().withMessage('numberOfSlots must be provided').bail().isNumeric().withMessage('numberOfSlots must be a valid number'),
+    Validation.authenticate,
+    Validation.validateRequest,
+    async (req: Request, res: Response) => {
+        const { name, numberOfSlots } = req.body;
+        const { id } = req.params;
+
+        const parkingService = new ParkingService();
+        const result = await parkingService.findAndUpdate({ id, numberOfSlots });
+
+        if (result) {
+            return ResponseService.sendSuccess(res, result, 'updated successfully');
+        }
+
+        return ResponseService.sendAlreadyCreated(res, `Parking lot with id [${id}] cannot be found`);
+    }
+);
 
 
 export { router as updateRouter };

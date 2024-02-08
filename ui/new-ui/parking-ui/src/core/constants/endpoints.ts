@@ -1,0 +1,6 @@
+export const GET_USER_ENDPOINT = 'v1/users/'
+export const LOGIN_ENDPOINT = 'v1/auth/login'
+export const CREATE_USER_ENDPOINT = 'v1/users'
+export const SEARCH_PARKINGS_ENDPOINT = 'v1/parking/parkings/search'
+export const PARKING_BASE_ENDPOINT = 'v1/parking'
+export const GET_QR_CODE_ENDPOINT = 'v1/qrCode'

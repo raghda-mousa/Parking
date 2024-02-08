@@ -12,6 +12,7 @@ export enum ECities {
 }
 
 export enum EType{
+	granted ='granted',
 	Point = 'Point',
   MultiPoint = 'MultiPoint',
   LineString = 'LineString',

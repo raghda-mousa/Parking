@@ -13,6 +13,7 @@ declare global {
 export class Validation {
     public static authenticate = async (req: Request, res: Response, next: NextFunction) => {
         const token = req.header('Authorization');
+        console.log({ token });
         if (!token) {
             return ResponseService.sendUnauthorized(res, 'Unauthorized')
         }
@@ -33,3 +34,4 @@ export class Validation {
         next()
     }
 }
+

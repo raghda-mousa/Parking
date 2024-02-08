@@ -19,6 +19,19 @@ router.get('/:reservationId',
             return ResponseService.sendAlreadyCreated(res,'Failed to generate barcode.');
         }
         return ResponseService.sendSuccess(res,qrCodeImage,'Create a successful QR ');
-});
+    });
+
+// router.get('/qr',
+//     Validation.authenticate,
+//     Validation.validateRequest,
+//     async (req: Request, res: Response) => {
+//         const barcodeService = new BarcodeService();
+//         const qrCodeImage = await barcodeService.generateRandomQR();
+
+//         if (!qrCodeImage) {
+//             return ResponseService.sendAlreadyCreated(res, 'Failed to generate barcode.');
+//         }
+//         return ResponseService.sendSuccess(res, qrCodeImage, 'Create a successful QR ');
+//     });
 
 export { router as getRouter };

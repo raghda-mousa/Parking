@@ -30,6 +30,7 @@ router.get(
     Validation.validateRequest,
     async (req: Request, res: Response) => {
         const { id } = req.params
+        console.log({ id })
         const userService = new UserService();
         const result = await userService.getUserById(id);
         if (result) {

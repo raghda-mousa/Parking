@@ -3,6 +3,7 @@ import paginate from 'mongoose-paginate-v2';
 import { IReservation } from '../interfaces';
 import { USERS_MODEL_NAME,PARKING_MODEL_NAME } from '@models';
 import { EReservationStatus } from '../enums';
+import { toDataURL } from 'qrcode';
 
 const RESERVATION_MODEL_NAME = 'reservation';
 const RESERVATION_COLLECTION_NAME = 'reservation';
@@ -13,10 +14,7 @@ interface IReservationModel extends PaginateModel< IReservationDoc> {
 
 const ReservationSchema = new Schema(
 	{
-		// userId: {
-		// 	type: mongoose.Schema.Types.ObjectId,
-		// 	ref: 'user'
-		//   },
+		
 		parkingId: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: PARKING_MODEL_NAME
@@ -27,7 +25,8 @@ const ReservationSchema = new Schema(
 			enum: EReservationStatus,
 			default: EReservationStatus.PENDING
 		  },
-		cost:{type: Number},
+		cost: { type: Number },
+		qrCode: { type: String},
 		sartTime: { type: Date },
 		endTime: { type: Date },
 		createdAt: { type: Date, default: Date.now },

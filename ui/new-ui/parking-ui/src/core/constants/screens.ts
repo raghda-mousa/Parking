@@ -1,0 +1,7 @@
+export const MAIN_SCREEN = 'main-screen'
+export const SIGNIN_SCREEN = 'signin-screen'
+export const SIGNUP_SCREEN = 'signup-screen'
+export const BOOKINGS_SCREEN = 'bookings-screen'
+export const PROFILE_SCREEN = 'profile-screen'
+export const HOME_SCREEN = 'home-screen'
+export const OWNER_SCREEN = 'owner-screen'

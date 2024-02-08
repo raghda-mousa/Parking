@@ -1,0 +1,61 @@
+{
+  
+  "expo": {
+    "react-native":"0.64.2",
+    "react-native-maps": "0.28.0",
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+        }
+      ]
+    ],
+    "name": "MyFirstProj",
+    "slug": "MyFirstProj",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "bundleIdentifier": "com.company",
+            "config": {
+                "googleMapsApiKey": "AIzaSyByabDfHg6gqiT16_DdkGB-BU_CItX-IRY"
+            }
+      ,
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "We need your location for some awesome features."
+      }
+    },
+    "android": {
+      "package": "com.company",
+            "config": {
+                "googleMaps": {
+                    "apiKey": "AIzaSyByabDfHg6gqiT16_DdkGB-BU_CItX-IRY"
+                }
+            }
+      ,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor'": "#ffffff"
+      }
+      ,
+        "permissions": [
+          "ACCESS_FINE_LOCATION",
+          "ACCESS_COARSE_LOCATION"
+        ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}

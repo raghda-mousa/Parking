@@ -30,6 +30,7 @@ router.get(
     Validation.validateRequest,
     async (req: Request, res: Response) => {
         const { id } = req.params
+        console.log({ id })
         const parkingService = new ParkingService();
         const result = await parkingService.getParkingById(id);
         if (result) {
@@ -45,38 +46,38 @@ router.get(
     Validation.authenticate,
     Validation.validateRequest,
     async (req: Request, res: Response) => {
-    try {
-        const { userId, parkingId } = req.params;
-        const parkingService = new ParkingService();
-        const parkingDetails = await parkingService.getParkingLotDetails(userId, parkingId);
+        try {
+            const { userId, parkingId } = req.params;
+            const parkingService = new ParkingService();
+            const parkingDetails = await parkingService.getParkingLotDetails(userId, parkingId);
 
-        if (!parkingDetails) {
-            return ResponseService.sendNotFound(res, `parking-lot with id [${parkingId}] cannot be found`);
+            if (!parkingDetails) {
+                return ResponseService.sendNotFound(res, `parking-lot with id [${parkingId}] cannot be found`);
+            }
+
+            ResponseService.sendSuccess(res, parkingDetails, 'Retrieved parking details successfully');
+        } catch (error) {
+            console.error(error);
+            return ResponseService.sendInternalServerError(res, 'Internal server error');
         }
+    });
 
-        ResponseService.sendSuccess(res, parkingDetails, 'Retrieved parking details successfully');
-    } catch (error) {
-        console.error(error);
-        return ResponseService.sendInternalServerError(res, 'Internal server error');
-    }
-});
-
-router.get('/parkings/search', 
+router.patch('/parkings/search',
     body('name').notEmpty().withMessage('name must be provided').bail().isString().withMessage('name must be a valid string'),
     Validation.authenticate,
     Validation.validateRequest,
     async (req: Request, res: Response) => {
-    try {
-        const { name } = req.query;
-        const parkingService = new ParkingService();
-        const searchResults = await parkingService.findByName(name as string);
+        try {
+            const { name } = req.body;
+            const parkingService = new ParkingService();
+            const searchResults = await parkingService.findByName(name as string);
 
-        return ResponseService.sendSuccess(res, searchResults, 'Retrieved search results successfully');
-    } catch (error) {
-        console.error(error);
-        return ResponseService.sendInternalServerError(res, 'Internal server error');
+            return ResponseService.sendSuccess(res, searchResults, 'Retrieved search results successfully');
+        } catch (error) {
+            console.error(error);
+            return ResponseService.sendInternalServerError(res, 'Internal server error');
 
-    }
-});
+        }
+    });
 
 export { router as getRouter };

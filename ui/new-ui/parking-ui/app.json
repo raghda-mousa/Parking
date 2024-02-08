@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "parking-ui",
+    "slug": "parking-ui",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "parking-ui"
+}

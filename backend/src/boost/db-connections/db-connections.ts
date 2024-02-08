@@ -13,7 +13,6 @@ async function initServiceDB() {
       throw new Error('DB_URL must be defined');
     }
 
-
     logger.info('--------Pre Connecting to Service MongoDB...');
 
     const dbUrl = `${process.env.DB_URL}`;

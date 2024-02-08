@@ -17,6 +17,7 @@ export class UserService {
     public create = async ({ name, email, password }: { name: string, email: string, password: string }) => {
         try {
             const u = await this.userModel.userModel.findOne({ email });
+            console.log({ u })
             if (u) {
                 return null
             }
@@ -35,8 +36,8 @@ export class UserService {
         if (!user || !(await bcrypt.compare(password, user.password))) {
             return null
         }
-        const token = jwt.sign({ name: user.name, email: user.email,type:user.type,id:user._id }, EnvironementService.jwtConfig.secret);
-        return { token,type:user.type }
+        const token = jwt.sign({ name: user.name, email: user.email, type: user.type, id: user._id }, EnvironementService.jwtConfig.secret);
+        return { token, type: user.type, id: user._id, name: user.name, email: user.email }
     }
     public getUserById = async (id: string) => {
         try {
