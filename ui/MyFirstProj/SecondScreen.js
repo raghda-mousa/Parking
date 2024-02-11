@@ -22,8 +22,12 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: '#2D245C',
     padding: 15,
-    borderRadius: 8,
-    marginTop: 20,
+    borderRadius: '50%',
+    marginTop: 550,
+    marginLeft: 'auto',
+    marginRight:'auto',
+    width: 150,
+    alignItems:'center'
   },
   buttonText: {
     color: 'white',
@@ -41,6 +45,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
+
   },
   box: {
     borderWidth: 1,
@@ -559,13 +564,10 @@ const UserDataScreen = () => {
     fetchUserData();
   }, []);
   const handleLogout = async () => {
-    //await AsyncStorage.removeItem('id');
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0, // <-- Indicates the position in the route stack
-        routes: [{ name: 'Main' }], // <-- Main should be the name of your screen component as defined in your stack navigator
-      })
-    );
+    await AsyncStorage.removeItem('id');
+    navigation.navigate('Main'); // <-- Main should be the name of your screen component as defined in your stack navigator
+     
+    
   };
   if (!userData) {
     return <View />;
@@ -578,9 +580,9 @@ const UserDataScreen = () => {
       <View style={{ flex: 1, justifyContent: 'start', alignContent: 'center', marginTop: 65 }}>
         <Text style={styles.Text}>Name: {userData.name}</Text>
         <Text style={styles.Text}>Email: {userData.email}</Text>
-        <TouchableOpacity style={styles.button} onPress={handleLogout}>
-          <Text style={styles.buttonText}>Log Out</Text>
-        </TouchableOpacity> 
+        <TouchableOpacity style={styles.button} onPress={handleLogout}> 
+           <Text style={styles.buttonText}>Log Out</Text> 
+        </TouchableOpacity>  
       </View>
     </ImageBackground>
   );
@@ -631,8 +633,8 @@ function MyTabs() {
 
 export default function App({ userId }) {
   return (
-    <NavigationContainer independent={true}>
+    
       <MyTabs />
-    </NavigationContainer>
+    
   );
 }

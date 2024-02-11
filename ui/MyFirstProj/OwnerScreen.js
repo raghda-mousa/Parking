@@ -36,7 +36,7 @@ const OwnerScreen = ({ route }) => {
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                     <TouchableOpacity
                         style={styles.backButton}
-                        onPress={() => navigation.navigate('parkingDetailScreen')}
+                        onPress={() => navigation.navigate('ParkingDetailScreen')}
                     >
                         <ArrowBackIcon name="arrow-back" size={25} color="white" />
                     </TouchableOpacity>

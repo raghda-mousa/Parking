@@ -1,14 +1,17 @@
 import { validationResult } from 'express-validator';
 import { Types } from 'mongoose';
-import { EReservationStatus, IReservation, IReservationModel, ReservationModel,IReservationDoc } from '@models';
+import { EReservationStatus, IReservation, IReservationModel, ReservationModel, IReservationDoc, ParkingModel } from '@models';
 import { BarcodeService } from '../QR';
+import { EReservationAction } from 'application/models/reservation/enums';
 
 export class ReservationService {
     private reservationModel: ReservationModel;
+    private parkingModel: ParkingModel;
     private barcodeService: BarcodeService;
     constructor() {
         this.reservationModel = new ReservationModel();
         this.barcodeService = new BarcodeService();
+        this.parkingModel = new ParkingModel();
     }
 
     // public createReservation = async (reservationData: IReservation) => {
@@ -33,10 +36,11 @@ export class ReservationService {
                 console.error("Failed to create reservation");
                 return null;
             }
+            await this.parkingModel.parkingModel.findByIdAndUpdate(reservationData.parkingId, { $inc: { numberOfSlots: -1 } });
 
             const qrcode = await this.barcodeService.generateBarcode(reservation._id.toString());
             reservation.qrCode = qrcode as string; // Assign the generated QR code to the reservation object
-            await reservation.save(); 
+            await reservation.save();
             return { ...reservation.toJSON(), qrcode };
         } catch (error) {
             console.error(error);
@@ -54,20 +58,27 @@ export class ReservationService {
         }
     };
 
-    public updateReservation = async ( reservationId: string, updateData: Partial<IReservation>) => {
+    public updateReservation = async (reservationId: string, updateData: Partial<IReservation> & { action: EReservationAction }) => {
         try {
+            const r = await this.reservationModel.reservationModel.findOne({ _id: reservationId, status: updateData.action === EReservationAction.ENTER ? EReservationStatus.PENDING : EReservationStatus.ACTIVE });
+            console.log({ r, updateData });
+            if (!r) {
+                throw new Error('reservation not found');
+            }
+            if (updateData.action === EReservationAction.EXIT)
+                await this.parkingModel.parkingModel.findByIdAndUpdate(r.parkingId, { $inc: { numberOfSlots: 1 } });
             const reservation = await this.reservationModel.reservationModel.findByIdAndUpdate(reservationId, updateData, { new: true });
             return reservation;
         } catch (error) {
             console.error(error);
-            return null;
+            throw new Error('reservation not found');
         }
     };
 
-    public deleteReservation = async (id:  string)=> {
+    public deleteReservation = async (id: string) => {
         try {
             const p = await this.reservationModel.reservationModel.findById(id);
-            if(!p){
+            if (!p) {
                 return null
             }
             const result = await this.reservationModel.reservationModel.findByIdAndUpdate(id, { $set: { status: EReservationStatus.ENDED } }, { new: true });
@@ -78,7 +89,7 @@ export class ReservationService {
         }
     };
 
-    public getReservationsByUserId = async (userId: string)=> {
+    public getReservationsByUserId = async (userId: string) => {
         try {
             const reservations = await this.reservationModel.reservationModel.find({ userId });
             return reservations;
@@ -89,7 +100,7 @@ export class ReservationService {
     };
     public getReservationsByParkingId = async (parkingId: string) => {
         try {
-            const reservations = await this.reservationModel.reservationModel.find({ parkingId,status:EReservationStatus.ACTIVE });
+            const reservations = await this.reservationModel.reservationModel.find({ parkingId, status: EReservationStatus.ACTIVE });
             return reservations;
         } catch (error) {
             console.error(error);

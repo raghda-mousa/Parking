@@ -16,10 +16,11 @@ router.get('/:reservationId',
      async (req: Request, res: Response) => {
     const { reservationId } = req.params;
     const reservationService = new ReservationService();
-
+             
     const reservation = await reservationService.getReservationById(reservationId);
     if (reservation) {
-        ResponseService.sendSuccess(res,reservation,'Reservation found');
+        ResponseService.sendSuccess(res, reservation, 'Reservation found');
+        console.log('sucsses'); 
     } else {
         ResponseService.sendNotFound(res,'Reservation not found' );
     }
@@ -46,8 +47,13 @@ router.get('/getByParkingId/:parkingId',
     async (req: Request, res: Response) => {
     const { parkingId } = req.params;
     const reservationService = new ReservationService();
-    const parkingReservations = await reservationService.getReservationsByParkingId(parkingId);
-    ResponseService.sendSuccess(res,parkingReservations,'parkingReservation found');
+         const reservation = await reservationService.getReservationsByParkingId(parkingId);
+        if (reservation) {
+            ResponseService.sendSuccess(res, reservation, 'Reservation found');
+            console.log(reservation);
+        } else {
+            ResponseService.sendNotFound(res, 'Reservation not found');
+        }
 
 });
 export { router as getRouter };

@@ -1,40 +1,44 @@
-import mongoose,{ Document, Model, Schema, Types, PaginateModel } from 'mongoose';
+import mongoose, { Document, Model, Schema, Types, PaginateModel } from 'mongoose';
 import paginate from 'mongoose-paginate-v2';
 import { IReservation } from '../interfaces';
-import { USERS_MODEL_NAME,PARKING_MODEL_NAME } from '@models';
+import { USERS_MODEL_NAME, PARKING_MODEL_NAME } from '@models';
 import { EReservationStatus } from '../enums';
 import { toDataURL } from 'qrcode';
 
 const RESERVATION_MODEL_NAME = 'reservation';
 const RESERVATION_COLLECTION_NAME = 'reservation';
 interface IReservationDoc extends IReservation, Document { }
-interface IReservationModel extends PaginateModel< IReservationDoc> {
+interface IReservationModel extends PaginateModel<IReservationDoc> {
 	build: (attr: IReservation) => IReservationDoc;
 };
 
 const ReservationSchema = new Schema(
 	{
-		
+
 		parkingId: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: PARKING_MODEL_NAME
-		  },
-		status: 
-		   {
+		},
+		status:
+		{
 			type: String,
 			enum: EReservationStatus,
 			default: EReservationStatus.PENDING
-		  },
+		},
 		cost: { type: Number },
-		qrCode: { type: String},
+		qrCode: { type: String },
 		sartTime: { type: Date },
 		endTime: { type: Date },
 		createdAt: { type: Date, default: Date.now },
 		updatedAt: { type: Date },
-		createdBy: { type: mongoose.Schema.Types.ObjectId,
-			ref: 'user' },
-		updatedBy: { type: mongoose.Schema.Types.ObjectId,
-			ref: 'user' }
+		createdBy: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'user'
+		},
+		updatedBy: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'user'
+		}
 	},
 	{
 		toJSON: {

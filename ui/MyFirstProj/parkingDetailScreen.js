@@ -6,7 +6,7 @@ import backgroundImage from './assets/Parking.gif';
 import { useNavigation } from '@react-navigation/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const parkingDetailScreen = () => {
+const ParkingDetailScreen = () => {
     const [userData, setUserData] = useState(null);
     const [userParkings, setUserParkings] = useState([]);
     const { get } = useAxios();
@@ -98,7 +98,6 @@ const styles = StyleSheet.create({
         color: '#180E4B',
         backgroundColor: 'grey',
         marginTop: 0,
-        // Add borderRadius to the text container
         borderRadius: 35,
         overflow: 'hidden',
     },
@@ -123,4 +122,4 @@ const styles = StyleSheet.create({
         fontSize: 30,
     },
 });
-export default parkingDetailScreen;
+export default ParkingDetailScreen;

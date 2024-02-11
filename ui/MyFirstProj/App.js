@@ -6,7 +6,7 @@ import SecondScreen from './SecondScreen';
 import SecScreen from './secScreen';
 import Signuppage from './Signuppage';
 import SigninPage from './SigninPage';
-import parkingDetailScreen from './parkingDetailScreen';
+import ParkingDetailScreen from './ParkingDetailScreen';
 import OwnerScreen from './OwnerScreen';
 import { AppRegistry } from 'react-native';
 
@@ -23,7 +23,7 @@ const App = () => (
       <Stack.Screen name="SigninPage" component={SigninPage} />
       <Stack.Screen name="Signuppage" component={Signuppage} />
       <Stack.Screen name="OwnerScreen" component={OwnerScreen} />
-      <Stack.Screen name="parkingDetailScreen" component={parkingDetailScreen} />
+      <Stack.Screen name="ParkingDetailScreen" component={ParkingDetailScreen} />
     </Stack.Navigator>
   </NavigationContainer>
 );

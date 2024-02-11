@@ -1,5 +1,5 @@
 import React, { useState, useEffect, } from 'react';
-import { Text, Alert, View, TouchableOpacity, StyleSheet, SafeAreaView, Pressable, Dimensions, ImageBackground } from 'react-native';
+import { Text, Alert, View, TouchableOpacity, StyleSheet, SafeAreaView, Pressable, Dimensions, Image, ImageBackground } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import useAxios, { get } from './hooks/use-axios'
 import QRCode from 'react-native-qrcode-svg';
@@ -164,13 +164,13 @@ const styles = StyleSheet.create({
     text: {
         alignItems: 'center',
         marginTop: 0,
-        marginBottom:1,
-        width:370,
+        marginBottom: 1,
+        width: 370,
         fontSize: 25,
         fontWeight: 'bold',
         backgroundColor: 'white',
-        borderWidth:1,
-        borderkColor:'black',
+        borderWidth: 1,
+        borderkColor: 'black',
     },
     Booking3: {
         alignItems: 'center',
@@ -237,10 +237,11 @@ const styles = StyleSheet.create({
     },
     qrCodeContainer: {
         alignItems: 'center',
+
     },
     cancelContainer: {
         margin: 30,
-            }
+    }
 });
 
 function MyBooking({ route }) {
@@ -271,7 +272,6 @@ function MyBooking({ route }) {
         };
         fetchData();
     }, [selectedParking]);
-
     const handleCancelPress = () => {
         navigation.reset({
             index: 0,
@@ -312,27 +312,6 @@ function MyBooking({ route }) {
                 if (reservationResponse.data.success) {
                     const newQrCodeValue = reservationResponse.data.data.qrcode;
                     setQrCode(newQrCodeValue);
-                    console.log('New QR Code:', newQrCodeValue);
-
-                    const token = await AsyncStorage.getItem('token');
-                    const updateParkingResponse = await axios.put(
-                        `http://127.0.0.1:3000/v1/parking/slot/${selectedParking.id}`,
-                        {
-                            numberOfSlots: bookingData.data.numberOfSlots
-                        },
-                        {
-                            headers: {
-                                Authorization: token,
-                            },
-                        }
-                    );
-
-                    if (updateParkingResponse.data.success) {
-                        console.log('Parking slots updated successfully.');
-                    } else {
-                        console.error('Failed to update parking slots.');
-                    }
-
                 } else {
                     Alert.alert('Error', 'Reservation failed. Please try again.');
                 }
@@ -351,7 +330,7 @@ function MyBooking({ route }) {
 
     const renderCancelButton = () => (
         <TouchableOpacity
-            style={styles.buttonCancel }
+            style={styles.buttonCancel}
             onPress={handleCancelPress}
         >
             <Text style={styles.buttonTextCancel}> Cancel</Text>
@@ -368,15 +347,10 @@ function MyBooking({ route }) {
                         {qrCode && (
                             <View style={styles.qrCodeContainer}>
                                 <Text style={styles.text}>Please use this code to enter and exit the parking</Text>
-                                <QRCode
-                                    value={qrCode}
-                                    size={370}
-                                    color="black"
-                                    backgroundColor="white"
-                                />
+                                <Image style={{ width: 370, height: 370 }} source={{ uri: qrCode }} />
                                 <View style={styles.cancelContainer}>
                                     {renderCancelButton()}
-                                    </View>
+                                </View>
                             </View>
                         )}
                         <View style={styles.buttonContainer}>

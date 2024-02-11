@@ -56,7 +56,7 @@ export default function SigninPage() {
         await AsyncStorage.setItem('token', response.data.data.token.toString())
         // setUser({ id: response.data.id, name: response.data.name, email: response.data.email, token: response.data.token, type: response.data.type })
         if (response.data.data.type == 'OWNER') {
-          navigation.navigate('parkingDetailScreen');
+          navigation.navigate('ParkingDetailScreen');
         } else {
           navigation.navigate('SecondScreen');
         }
