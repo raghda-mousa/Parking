@@ -1,5 +1,5 @@
 import { EParkingStatus } from '@models';
-import { Ipayment, IpaymentModel, PaymentModel } from 'application/models/payment/';
+import { Ipayment, PaymentModel } from 'application/models/payment/';
 import { Types } from 'mongoose';
 
 export class PaymentService {

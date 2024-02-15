@@ -35,10 +35,6 @@ export class ResponseService {
     static sendAlreadyCreated(res: Response, message: string, errors?: any) {
         res.status(500).send({ success: false, message, errors });
     }
-    // static handleError = (res: Response, error: any) => {
-    //     console.error(error);
-    //     return res.status(500).json({ error: 'Internal server error.' });
-    // };
 }
 
 export default ResponseService;

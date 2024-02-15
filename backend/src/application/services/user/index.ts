@@ -6,7 +6,6 @@ import {
     EUserStatus,
     UserModel
 } from '@models'
-import { EUserType } from 'application/models/users/enums';
 
 export class UserService {
     private logger = logi(__filename);
@@ -42,20 +41,6 @@ export class UserService {
     public getUserById = async (id: string) => {
         try {
             const user = await this.userModel.userModel.findById(id);
-            return user
-        }
-        catch (error: any) {
-            this.logger.error(error.message)
-            return null
-        }
-    }
-    public updateUser = async (email: string, payload: { name: string, password: string }) => {
-        try {
-            const user = await this.userModel.userModel.findOne({ email });
-            if (user) {
-                const hashedPassword = await bcrypt.hash(payload.password, 10);
-                user.update({ password: hashedPassword, name: payload.name });
-            }
             return user
         }
         catch (error: any) {

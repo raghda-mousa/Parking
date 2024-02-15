@@ -1,4 +1,4 @@
-import { Document, Model, Schema, Types, PaginateModel } from 'mongoose';
+import { Document, Schema, PaginateModel } from 'mongoose';
 import paginate from 'mongoose-paginate-v2';
 import { IUser } from '../interfaces';
 import {

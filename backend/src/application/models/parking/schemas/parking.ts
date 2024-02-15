@@ -1,4 +1,4 @@
-import mongoose,{ Document, Model, model, Schema, Types, PaginateModel } from 'mongoose';
+import mongoose,{ Document, Schema, PaginateModel } from 'mongoose';
 import paginate from 'mongoose-paginate-v2';
 import { IParking } from '../interfaces';
 import {
@@ -6,7 +6,6 @@ import {
     EParkingStatus,
     EType,
 } from '../enums';
-import { USERS_MODEL_NAME } from '@models';
 const PARKING_MODEL_NAME = 'parking';
 const PARKING_COLLECTION_NAME = 'parkings';
 interface IParkingDoc extends IParking, Document { }

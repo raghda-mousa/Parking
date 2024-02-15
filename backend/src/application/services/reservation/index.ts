@@ -1,6 +1,4 @@
-import { validationResult } from 'express-validator';
-import { Types } from 'mongoose';
-import { EReservationStatus, IReservation, IReservationModel, ReservationModel, IReservationDoc, ParkingModel } from '@models';
+import { EReservationStatus, IReservation, ReservationModel, ParkingModel } from '@models';
 import { BarcodeService } from '../QR';
 import { EReservationAction } from 'application/models/reservation/enums';
 
@@ -14,22 +12,9 @@ export class ReservationService {
         this.parkingModel = new ParkingModel();
     }
 
-    // public createReservation = async (reservationData: IReservation) => {
-    //     try {
-    //         // Inside createReservation method
-    //         const reservation = await this.reservationModel.reservationModel.create(reservationData);
-    //         const qrcode = await this.barcodeService.generateBarcode(reservation._id.toString());
-    //         reservation.qrcode = qrcode; // Assign the generated QR code to the reservation object
-    //         await reservation.save(); // Save the reservation object with the QR code
-    //         return { ...reservation.toJSON(), qrcode };
-    //     } catch (error) {
-    //         console.error(error);
-    //         return null;
-    //     }
-    // };
+
     public createReservation = async (reservationData: IReservation) => {
         try {
-            // Inside createReservation method
             const reservation = await this.reservationModel.reservationModel.create(reservationData);
 
             if (!reservation) {
@@ -39,7 +24,7 @@ export class ReservationService {
             await this.parkingModel.parkingModel.findByIdAndUpdate(reservationData.parkingId, { $inc: { numberOfSlots: -1 } });
 
             const qrcode = await this.barcodeService.generateBarcode(reservation._id.toString());
-            reservation.qrCode = qrcode as string; // Assign the generated QR code to the reservation object
+            reservation.qrCode = qrcode as string; 
             await reservation.save();
             return { ...reservation.toJSON(), qrcode };
         } catch (error) {

@@ -1,6 +1,4 @@
 import express, { Request, Response } from 'express';
-import { Types } from 'mongoose';
-import { IReservation } from '@models';
 import { UserService } from '@services';
 import { ReservationService } from 'application/services/reservation/'; 
 import { param } from 'express-validator';

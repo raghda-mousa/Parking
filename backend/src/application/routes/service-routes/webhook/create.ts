@@ -16,7 +16,6 @@ router.post('/',
                 transmission_sig: req.headers['paypal-transmission-sig'] as string,
                 transmission_time: req.headers['paypal-transmission-time'] as string,
                 webhook_id: '0PF98212BX8413045',
-                // baseURL: req.headers['https://api-m.sandbox.paypal.com'],
                 webhook_event: req.body
 
             });

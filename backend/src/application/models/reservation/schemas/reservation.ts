@@ -1,9 +1,8 @@
-import mongoose, { Document, Model, Schema, Types, PaginateModel } from 'mongoose';
+import mongoose, { Document, Schema, PaginateModel } from 'mongoose';
 import paginate from 'mongoose-paginate-v2';
 import { IReservation } from '../interfaces';
-import { USERS_MODEL_NAME, PARKING_MODEL_NAME } from '@models';
+import {  PARKING_MODEL_NAME } from '@models';
 import { EReservationStatus } from '../enums';
-import { toDataURL } from 'qrcode';
 
 const RESERVATION_MODEL_NAME = 'reservation';
 const RESERVATION_COLLECTION_NAME = 'reservation';

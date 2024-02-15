@@ -1,9 +1,6 @@
 import { logi } from '@boost';
-import { UserModel, UsersSchema } from '@models';
-
 
 import * as qrcode from 'qrcode';
-import { ReservationService } from '../reservation';
 
 export class BarcodeService {
     private logger = logi(__filename);
@@ -13,7 +10,6 @@ export class BarcodeService {
     public async generateBarcode(reservationId:string) {
         try {
             const qrCodeImage = await this.generateQRCode(reservationId);
-
             return qrCodeImage;
         } catch (error: any) {
             this.logger.error(error.message);
@@ -24,8 +20,6 @@ export class BarcodeService {
     private async generateQRCode(data: string) {
         try {
             const qrCodeImage = await qrcode.toDataURL(data);
-            // const qrCodeBuffer = await qrcode.toBuffer(data);
-            // return qrCodeBuffer;
             return qrCodeImage;
         } catch (error: any) {
             this.logger.error(error.message);

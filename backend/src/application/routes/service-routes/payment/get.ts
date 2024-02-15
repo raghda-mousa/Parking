@@ -1,9 +1,6 @@
 // PaymentRoutes.ts
 import express, { Router, Request, Response, query } from 'express';
 import { PaymentService } from 'application/services/payment';
-import { Ipayment } from 'application/models/payment/';
-import {  PaymentModel } from 'application/models/payment/';
-import { Types } from 'mongoose';
 import { ResponseService } from '@services';
 import { Validation } from '@middlewares';
 import { body, param } from 'express-validator';

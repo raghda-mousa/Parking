@@ -40,28 +40,6 @@ router.get(
     }
 );
 
-router.get(
-    '/parking/details/:userId/:parkingId',
-    param('parkingId').isMongoId().withMessage('Parking ID must be a valid MongoDB ID'),
-    Validation.authenticate,
-    Validation.validateRequest,
-    async (req: Request, res: Response) => {
-        try {
-            const { userId, parkingId } = req.params;
-            const parkingService = new ParkingService();
-            const parkingDetails = await parkingService.getParkingLotDetails(userId, parkingId);
-
-            if (!parkingDetails) {
-                return ResponseService.sendNotFound(res, `parking-lot with id [${parkingId}] cannot be found`);
-            }
-
-            ResponseService.sendSuccess(res, parkingDetails, 'Retrieved parking details successfully');
-        } catch (error) {
-            console.error(error);
-            return ResponseService.sendInternalServerError(res, 'Internal server error');
-        }
-    });
-
 router.patch('/parkings/search',
     body('name').notEmpty().withMessage('name must be provided').bail().isString().withMessage('name must be a valid string'),
     Validation.authenticate,

@@ -1,6 +1,4 @@
-import { ParkingAxios } from '@boost';
 import paypal from 'paypal-rest-sdk';
-import { EnvironementService } from '../environement';
 
 paypal.configure({
     mode: 'sandbox',

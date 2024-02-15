@@ -8,7 +8,6 @@ import {
   authRouter,
   reservationsRouter,
   paymentRouter,
-  userLocationRouter,
   nearestParkingServiceRouter,
   qrCodeRouter,
   paypalRouter,
@@ -33,7 +32,6 @@ app.use(paypalRouter);
 app.use(healthCheckRouter);
 app.use(parkingsRouter);
 app.use(usersRouter);
-app.use(userLocationRouter);
 app.use(reservationsRouter);
 app.use(paymentRouter);
 app.use(authRouter);

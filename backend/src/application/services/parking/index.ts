@@ -1,10 +1,9 @@
 import { logi } from '@boost';
 import {
     EParkingStatus,
-    ParkingModel,
-    UserModel
+    ParkingModel
 } from '@models'
-import { ECities, EType } from 'application/models/parking/enums';
+import { ECities } from 'application/models/parking/enums';
 import { ReservationService } from '../reservation';
 
 interface IGeoJSONPoint {
@@ -49,23 +48,6 @@ export class ParkingService {
         const parkingLot = await this.parkingModel.parkingModel.findByIdAndUpdate(id, { $set: { name } }, { new: true });
         return parkingLot
     }
-    public findAndUpdate = async ({ id, numberOfSlots }: { id: string, numberOfSlots: number }) => {
-        const p = await this.parkingModel.parkingModel.findById(id);
-        if (!p) {
-            return null;
-        }
-
-        const updatedNumberOfSlots = numberOfSlots - 1;
-
-        const parkingLot = await this.parkingModel.parkingModel.findByIdAndUpdate(
-            id,
-            { $set: { numberOfSlots: updatedNumberOfSlots } },
-            { new: true }
-        );
-
-        return parkingLot;
-    };
-
 
     public findByIdAndDelete = async (id: string) => {
         const p = await this.parkingModel.parkingModel.findById(id);
@@ -85,51 +67,10 @@ export class ParkingService {
             return null
         }
     }
-    public getAvailableParkingLots = async (parkingId: string) => {
-        try {
-            const parking = await this.parkingModel.parkingModel.findById(parkingId);
-            if (!parking) {
-                return null
-            }
-            const reservations = await this.reservationService.getReservationsByParkingId(parkingId);
-            if (!reservations) {
-                return parking.numberOfSlots;
-            }
-
-            return parking.numberOfSlots - reservations.length;
-        } catch (error) {
-            console.error(error);
-            return [];
-        }
-    };
     public async findByName(name: string) {
         try {
             const parkings = await this.parkingModel.parkingModel.find({ name: { $regex: name, $options: 'i' } });
             return parkings;
-        } catch (error: any) {
-            this.logger.error(error.message);
-            return null;
-        }
-    }
-
-    public async getParkingLotDetails(userId: string, parkingId: string) {
-        try {
-            const parking = await this.parkingModel.parkingModel.findOne({ _id: parkingId, owner: userId }).exec();
-
-            if (!parking) {
-                return null;
-            }
-
-            const reservations = await this.reservationService.getReservationsByParkingId(parkingId);
-            const { name, numberOfSlots, chargePerMinute } = parking;
-            const emptySlots = numberOfSlots - reservations.length;;
-
-            return {
-                name,
-                chargePerMinute,
-                numberOfSlots,
-                emptySlots,
-            };
         } catch (error: any) {
             this.logger.error(error.message);
             return null;

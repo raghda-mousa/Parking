@@ -18,12 +18,6 @@ router.patch('/',
             const { location, distance } = req.body;
 
             const nearestParkingService = new NearestParkingService();
-            // const userLocation = await nearestParkingService.getCurrentLocation();
-
-            // if (!userLocation) {
-            //     console.log('User location not found.');
-            //     return ResponseService.sendNotFound(res, 'User location not found.');
-            // }
 
             const parkingLots = await nearestParkingService.findParkingWithinDistance(location, +distance);
 

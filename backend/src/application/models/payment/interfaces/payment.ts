@@ -1,4 +1,4 @@
-import { EPaymentGateway, EPaymentStatus, EPaymentType } from '../enums';
+import { EPaymentGateway, EPaymentType } from '../enums';
 
 export interface Ipayment {
     reservationId: string;

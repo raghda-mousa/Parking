@@ -3,10 +3,7 @@ import express, { Request, Response } from 'express';
 import { IReservation } from '@models';
 import { ReservationService } from 'application/services/reservation/';
 import { ResponseService } from '@services';
-import { param } from 'express-validator';
 import { Validation } from '@middlewares';
-import { Types } from 'mongoose'; // Add this line to import Types
-import * as parking from 'application/services/parking'; // Update the import path for Parking
 
 const router = express.Router();
 
