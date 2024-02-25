@@ -28,7 +28,7 @@
     "ios": {
       "bundleIdentifier": "com.company",
             "config": {
-                "googleMapsApiKey": "AIzaSyByabDfHg6gqiT16_DdkGB-BU_CItX-IRY"
+                "googleMapsApiKey": "AIzaSyCGLQvgOo6ObSgWoe_cjdj06WpW6ivTQKM"
             }
       ,
       "supportsTablet": true,
@@ -40,7 +40,7 @@
       "package": "com.company",
             "config": {
                 "googleMaps": {
-                    "apiKey": "AIzaSyByabDfHg6gqiT16_DdkGB-BU_CItX-IRY"
+                    "apiKey": "AIzaSyCGLQvgOo6ObSgWoe_cjdj06WpW6ivTQKM"
                 }
             }
       ,

@@ -1,8 +1,6 @@
 import React from 'react'; 
-import { View, Text, Image, Button, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
-import { useNavigation, NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-const Stack = createStackNavigator();
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 const LoginPage = () => {
   const navigation = useNavigation();
@@ -52,11 +50,8 @@ const styles = StyleSheet.create({
   },
   backgroundImage: {
     position: 'absolute',
-    top: 0,
-    left: 0,
     width: '100%',
     height: '100%',
-    resizeMode: 'cover',
   },
   buttonContainer: {
     alignItems: 'center',

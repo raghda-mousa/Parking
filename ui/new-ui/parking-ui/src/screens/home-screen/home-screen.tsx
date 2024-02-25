@@ -71,7 +71,7 @@ const HomeScreen = () => {
                     <MapViewDirections
                         origin={userLocation}
                         destination={selectedMarker ? selectedMarker.coordinate : null}
-                        apikey={'AIzaSyByabDfHg6gqiT16_DdkGB-BU_CItX-IRY'}
+                        apikey={'AIzaSyCGLQvgOo6ObSgWoe_cjdj06WpW6ivTQKM'}
                         strokeWidth={4}
                         strokeColor="blue"
                     />

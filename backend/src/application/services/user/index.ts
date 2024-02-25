@@ -22,7 +22,8 @@ export class UserService {
             }
             const hashedPassword = await bcrypt.hash(password, 10);
             const user = await this.userModel.userModel.create({ name, email, password: hashedPassword });
-            return user
+            const token = jwt.sign({ name: user.name, email: user.email, type: user.type, id: user._id }, EnvironementService.jwtConfig.secret);
+            return { user, token}
         }
         catch (error: any) {
             this.logger.error(error.message)

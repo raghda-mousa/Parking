@@ -1,22 +1,15 @@
-import React, { useState, useEffect, Component } from 'react';
-import { Text, Platform, TextInput, Alert, Button, View, StyleSheet, FlatList, TouchableOpacity, ImageBackground } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Text, TextInput, Alert, View, StyleSheet, FlatList, TouchableOpacity, ImageBackground } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { CommonActions } from '@react-navigation/native';
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import {  useNavigation } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import axios from 'axios';
 import useAxios from './src/hooks/use-axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import backgroundImage from './assets/myaccount.jpeg';
 import MapViewDirections from 'react-native-maps-directions';
-import Main from './MainScreen';
 import { MyBooking } from './src/mybooking';
-
-
-import { createStackNavigator } from '@react-navigation/stack';
-
 
 const styles = StyleSheet.create({
   button: {
@@ -249,8 +242,7 @@ function HomeScreen() {
   const [direction, getDirections] = useState(null);
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [routeCoordinates, setRouteCoordinates] = useState([]);
-  const [selectedParkingCoordinate, setSelectedParkingCoordinate] = useState(null); // 1. Add state to store selected parking coordinate
-  const [activeBookingQR, setActiveBookingQR] = useState('');
+  const [selectedParkingCoordinate, setSelectedParkingCoordinate] = useState(null);
 
   const searchForParking = async () => {
     const response = await patch('v1/parking/parkings/search', { name });
@@ -261,7 +253,6 @@ function HomeScreen() {
 
     if (data.length > 0) {
       for (matchingParkings of data) {
-        // Check if the number of slots is greater than zero for each parking
         if (matchingParkings.numberOfSlots > 0) {
           anyParkingAvailable = true;
           setSelectedParking(matchingParkings); 
@@ -277,7 +268,6 @@ function HomeScreen() {
         }
       }
 
-      // If no parking with available slots is found
       if (!anyParkingAvailable) {
         Alert.alert('Info', 'All matching parkings are full. Please choose another parking.');
       }
@@ -295,13 +285,12 @@ function HomeScreen() {
       });
       setSelectedParking(item);
 
-      // رسم الطريق بين موقع المستخدم وموقف السيارة
       setDirections({
         origin: {
           latitude: userLocation.latitude,
           longitude: userLocation.longitude,
         },
-        destination: {
+        coordinate: {
           latitude: item.location.coordinates[0],
           longitude: item.location.coordinates[1],
         },
@@ -374,24 +363,6 @@ function HomeScreen() {
   };
 
 
-  useEffect(() => {
-    (async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        console.error('Permission to access location was denied');
-        return;
-      }
-
-      const location = await Location.getCurrentPositionAsync({});
-      setUserLocation({
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-      });
-
-      getNearbyParkings();
-    })();
-  }, []);
-
   const handleMapPress = (e) => {
     if (userLocation) {
       setRouteCoordinates([
@@ -404,19 +375,20 @@ function HomeScreen() {
   const handleClearPress = () => {
     setMatchingParkings([]);
     setName('');
-    setRouteCoordinates([]); // Clear route coordinates
-    setSelectedParking(null); // Clear selected parking
-    setSelectedParkingCoordinate(null); // Clear selected parking coordinate
+    setRouteCoordinates([]); 
+    setSelectedParking(null); 
+    setSelectedParkingCoordinate(null);
   };
 
   const fetchParkingData = async (marker) => {
     try {
-      const response = await get('v1/parking/${marker.id}');
+      const response = await get(`v1/parking/${marker.id}`);
       setSelectedParkingData(response?.data);
     } catch (error) {
       console.error('Error fetching parking data:', error);
     }
   };
+
   const handleMarkerPress = async (marker) => {
     if (marker.color === 'green') {
       setSelectedParking(marker);
@@ -493,7 +465,6 @@ function HomeScreen() {
         )}
       </View>
       <View style={styles.map}>
-
         <MapView
           provider={PROVIDER_GOOGLE}
           style={styles.map}
@@ -519,20 +490,32 @@ function HomeScreen() {
               onPress={() => handleMarkerPress(marker)}
             />
           ))}
-          <MapViewDirections
+          {/* <MapViewDirections
             origin={userLocation}
             destination={selectedMarker ? selectedMarker.coordinate : null}
-            apikey={'AIzaSyByabDfHg6gqiT16_DdkGB-BU_CItX-IRY'}
+            apikey={'AIzaSyCGLQvgOo6ObSgWoe_cjdj06WpW6ivTQKM'}
             strokeWidth={4}
             strokeColor="blue"
           />
           <MapViewDirections
             origin={userLocation}
-            destination={directions ? directions.destination : null}
-            apikey={'AIzaSyByabDfHg6gqiT16_DdkGB-BU_CItX-IRY'}
+            destination={directions ? directions.coordinate : null}
+            apikey={'AIzaSyCGLQvgOo6ObSgWoe_cjdj06WpW6ivTQKM'}
+            strokeWidth={4}
+            strokeColor="blue"
+          /> */}
+          <MapViewDirections
+            origin={userLocation}
+            destination={
+              selectedMarker ? selectedMarker.coordinate :
+                directions ? directions.coordinate :
+                  null
+            }
+            apikey={'AIzaSyCGLQvgOo6ObSgWoe_cjdj06WpW6ivTQKM'}
             strokeWidth={4}
             strokeColor="blue"
           />
+
         </MapView>
       </View>
     </View>
@@ -542,11 +525,8 @@ function HomeScreen() {
 const UserDataScreen = () => {
   const [userData, setUserData] = useState(null);
   const navigation = useNavigation();
-  // const user = useRecoilValue(userState);
-  // const { get } = useAxios();
   const { get } = useAxios();
-  // state management Redux, recoil -- beta version 
-  // console.log({ user })
+
   const fetchUserData = async () => {
     try {
       const userId = await AsyncStorage.getItem('id');
@@ -565,9 +545,7 @@ const UserDataScreen = () => {
   }, []);
   const handleLogout = async () => {
     await AsyncStorage.removeItem('id');
-    navigation.navigate('Main'); // <-- Main should be the name of your screen component as defined in your stack navigator
-     
-    
+    navigation.navigate('Main'); 
   };
   if (!userData) {
     return <View />;
@@ -591,8 +569,6 @@ const UserDataScreen = () => {
 const Tab = createBottomTabNavigator();
 
 function MyTabs() {
-  const Stack = createStackNavigator();
-  const [userId, setUserId] = useState(null);
   return (
     
     <Tab.Navigator screenOptions={{ headerShown: false }}>
@@ -616,8 +592,6 @@ function MyTabs() {
       />
 
       <Tab.Screen name="My Account" component={UserDataScreen}
-        
-        
         options={{
           tabBarLabel: 'My Account',
           tabBarIcon: ({ color, size }) => (
@@ -631,10 +605,9 @@ function MyTabs() {
       );
 }
 
-export default function App({ userId }) {
+export default function App({  }) {
   return (
-    
       <MyTabs />
-    
+
   );
 }

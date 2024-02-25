@@ -5,6 +5,37 @@ import useAxios from './src/hooks/use-axios';
 import backgroundImage from './assets/parking.jpeg';
 import { useNavigation } from '@react-navigation/native';
 
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    textContainer: {
+        marginBottom: 450,
+        marginLeft: 230
+    },
+    backgroundImage: {
+        flex: 1,
+        height: '100%',
+        width: '100%',
+        justifyContent: 'center',
+    },
+    text: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: 'black',
+        marginTop: 50,
+        marginBottom: 10,
+        paddingTop: 0
+    },
+    backButton: {
+        position: 'absolute',
+        top: 40,
+        left: 20,
+        padding: 10,
+        borderRadius: 20,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+});
 
 const OwnerScreen = ({ route }) => {
     const [parkingData, setParkingData] = useState(null);
@@ -53,38 +84,5 @@ const OwnerScreen = ({ route }) => {
         </View>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    textContainer: {
-        marginBottom: 450,
-        marginLeft: 230
-    },
-    backgroundImage: {
-        flex: 1,
-        resizeMode: 'cover',
-        height: '100%',
-        width: '100%',
-        justifyContent: 'center',
-    },
-    text: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: 'black',
-        marginTop: 50,
-        marginBottom: 10,
-        paddingTop: 0
-    },
-    backButton: {
-        position: 'absolute',
-        top: 40,
-        left: 20,
-        padding: 10,
-        borderRadius: 20,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    },
-});
 
 export default OwnerScreen;
